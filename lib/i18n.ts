@@ -10,6 +10,7 @@ export const translations = {
       conditions: "Conditions",
       support: "Support",
       salafiya: "Salafiya",
+      dashboard: "Tableau de bord",
     },
     burger: {
       language: "Langue",
@@ -76,6 +77,7 @@ export const translations = {
       conditions: "Terms",
       support: "Support",
       salafiya: "Salafiyah",
+      dashboard: "Dashboard",
     },
     burger: {
       language: "Language",
@@ -142,6 +144,7 @@ export const translations = {
       conditions: "الشروط",
       support: "الدعم",
       salafiya: "السلفية",
+      dashboard: "لوحة التحكم",
     },
     burger: {
       language: "اللغة",
