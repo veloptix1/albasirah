@@ -4,7 +4,7 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { useLang } from "@/components/LangProvider";
 import {
-  IconLivre, IconUser, IconDownload, IconArrowRight, IconBook,
+  IconLivre, IconUser, IconDownload, IconBook,
 } from "@/components/icons";
 
 type Livre = {
@@ -36,8 +36,9 @@ export default function LivrePage({ params }: { params: Promise<{ slug: string }
 
   useEffect(() => {
     (async () => {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("livres").select("*").eq("slug", slug).single();
+      if (error) console.error("Erreur livre:", error);
       setLivre(data);
       setLoading(false);
     })();
@@ -87,9 +88,7 @@ export default function LivrePage({ params }: { params: Promise<{ slug: string }
         ← Retour aux livres
       </Link>
 
-      {/* Fiche du livre */}
       <div className="mt-6 mb-10 grid md:grid-cols-[280px_1fr] gap-8">
-        {/* Couverture */}
         <div className="bg-gradient-to-br from-emerald to-emerald-dark rounded-[28px]
                         aspect-[3/4] flex items-center justify-center
                         overflow-hidden shadow-[0_30px_60px_rgba(13,92,74,0.2)]">
@@ -106,7 +105,6 @@ export default function LivrePage({ params }: { params: Promise<{ slug: string }
           )}
         </div>
 
-        {/* Infos */}
         <div className="flex flex-col">
           {livre.categorie && (
             <div className="inline-block self-start px-3 py-1 rounded-full
@@ -171,7 +169,6 @@ export default function LivrePage({ params }: { params: Promise<{ slug: string }
         </div>
       </div>
 
-      {/* Lecteur PDF intégré */}
       {showReader && (
         <div className="bg-white rounded-[28px] overflow-hidden border border-emerald/10
                         shadow-[0_25px_60px_rgba(13,92,74,0.1)]">
@@ -192,7 +189,6 @@ export default function LivrePage({ params }: { params: Promise<{ slug: string }
         </div>
       )}
 
-      {/* Astuce pour ouvrir */}
       {!showReader && (
         <div className="bg-emerald/5 rounded-3xl p-6 text-center border border-emerald/10">
           <p className="text-sm text-gray-600">
