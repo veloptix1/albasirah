@@ -34,7 +34,9 @@ export default function AuthPage() {
       return;
     }
 
+    // 🔥 REDIRECTION VERS DASHBOARD APRÈS CONNEXION
     router.push("/dashboard");
+    router.refresh();
   };
 
   return (
