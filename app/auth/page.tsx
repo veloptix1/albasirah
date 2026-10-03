@@ -34,7 +34,7 @@ export default function AuthPage() {
       return;
     }
 
-    router.push("/profil");
+    router.push("/dashboard");
   };
 
   return (
@@ -53,7 +53,6 @@ export default function AuthPage() {
           {mode === "login" ? "Connexion à votre compte" : "Créer votre compte"}
         </p>
 
-        {/* Onglets */}
         <div className="flex bg-emerald/8 p-1 rounded-full mb-6">
           <button
             onClick={() => setMode("login")}
