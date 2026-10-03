@@ -208,3 +208,10 @@ export const IconCalendar = ({ size = 14 }) => (
     <path d="M16 2v4M8 2v4M3 10h18"/>
   </svg>
 );
+export const IconBook = ({ size = 22 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+       stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2 4h7a3 3 0 013 3v13a2 2 0 00-2-2H2z"/>
+    <path d="M22 4h-7a3 3 0 00-3 3v13a2 2 0 012-2h8z"/>
+  </svg>
+);
