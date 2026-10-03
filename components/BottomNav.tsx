@@ -1,17 +1,19 @@
 "use client";
 import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { IconHome, IconSpeaker, IconSearch, IconBook, IconUser } from "./icons";
 
 const items = [
-  { id: "home",    label: "Accueil",  Icon: IconHome },
-  { id: "audio",   label: "Audio",    Icon: IconSpeaker },
-  { id: "explore", label: "Explorer", Icon: IconSearch, center: true },
-  { id: "hadiths", label: "Hadiths",  Icon: IconBook },
-  { id: "profil",  label: "Profil",   Icon: IconUser },
+  { id: "home",    label: "Accueil",  Icon: IconHome,    href: "/" },
+  { id: "audio",   label: "Audio",    Icon: IconSpeaker, href: "/audio" },
+  { id: "explore", label: "Explorer", Icon: IconSearch,  href: "/explorer", center: true },
+  { id: "hadiths", label: "Hadiths",  Icon: IconBook,    href: "/hadiths" },
+  { id: "profil",  label: "Profil",   Icon: IconUser,    href: "/profil" },
 ];
 
 export default function BottomNav() {
-  const [active, setActive] = useState("home");
+  const pathname = usePathname();
+  const router = useRouter();
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-[950]
@@ -20,15 +22,12 @@ export default function BottomNav() {
                     shadow-[0_-10px_30px_rgba(13,92,74,0.08)]
                     px-[6%] py-2.5">
       <div className="max-w-[600px] mx-auto flex justify-between items-center gap-1">
-        {items.map(({ id, label, Icon, center }) => {
-          const isActive = active === id;
+        {items.map(({ id, label, Icon, center, href }) => {
+          const isActive = pathname === href;
           if (center) {
             return (
-              <button
-                key={id}
-                onClick={() => setActive(id)}
-                className="flex-1 flex flex-col items-center gap-1 relative"
-              >
+              <button key={id} onClick={() => router.push(href)}
+                className="flex-1 flex flex-col items-center gap-1 relative">
                 <div className="w-12 h-12 -mt-6 rounded-full
                                 bg-gradient-to-br from-emerald to-emerald-dark
                                 flex items-center justify-center
@@ -44,13 +43,10 @@ export default function BottomNav() {
             );
           }
           return (
-            <button
-              key={id}
-              onClick={() => setActive(id)}
+            <button key={id} onClick={() => router.push(href)}
               className={`flex-1 flex flex-col items-center gap-1 py-2 rounded-2xl
                           transition-colors relative
-                          ${isActive ? "text-emerald" : "text-gray-500"}`}
-            >
+                          ${isActive ? "text-emerald" : "text-gray-500"}`}>
               {isActive && (
                 <span className="absolute -top-2.5 w-8 h-[3px] bg-gold rounded-full" />
               )}
