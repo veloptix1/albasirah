@@ -1,12 +1,28 @@
+"use client";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { supabase } from "@/lib/supabase";
 import { IconMosque } from "./icons";
 
 export default function Navbar() {
+  const [connected, setConnected] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setConnected(!!data.session);
+    });
+    const { data: listener } = supabase.auth.onAuthStateChange((_e, session) => {
+      setConnected(!!session);
+    });
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
   return (
     <header className="fixed top-0 left-0 right-0 z-[900] px-[6%] py-4
                        flex justify-between items-center
                        bg-cream/90 backdrop-blur-md
                        border-b border-emerald/10">
-      <a href="/" className="flex items-center gap-3 no-underline">
+      <Link href="/" className="flex items-center gap-3 no-underline">
         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald to-emerald-dark
                         flex items-center justify-center
                         shadow-[0_4px_14px_rgba(13,92,74,0.3)]">
@@ -20,18 +36,13 @@ export default function Navbar() {
             VISION INTÉRIEURE
           </small>
         </div>
-      </a>
+      </Link>
 
-      <div className="flex gap-1 bg-emerald/8 p-1 rounded-full">
-        <button className="px-3.5 py-1.5 rounded-full text-xs font-semibold
-                           bg-emerald text-white">
-          FR
-        </button>
-        <button className="px-3.5 py-1.5 rounded-full text-xs font-semibold
-                           text-emerald">
-          AR
-        </button>
-      </div>
+      <Link href={connected ? "/profil" : "/auth"}
+        className="px-5 py-2 rounded-full bg-emerald text-white text-xs
+                   font-semibold hover:bg-emerald-dark transition">
+        {connected ? "Mon profil" : "Connexion"}
+      </Link>
     </header>
   );
 }
