@@ -19,7 +19,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-[900] px-[6%] py-3
+    <header className="fixed top-0 left-0 right-0 z-[800] px-[6%] py-3
                        flex justify-between items-center
                        bg-cream/90 backdrop-blur-md
                        border-b border-emerald/10">
