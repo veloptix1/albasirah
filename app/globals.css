@@ -13,12 +13,17 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+html, body {
+  overflow-x: hidden;
+  /* PAS de overflow: hidden sur body */
+}
+
 body {
   font-family: 'Poppins', sans-serif;
   background: var(--cream);
   color: #2c2c2c;
   padding-bottom: 90px;
-  overflow-x: hidden;
+  min-height: 100vh;
 }
 
 /* Animation intro salam (voiture) */
