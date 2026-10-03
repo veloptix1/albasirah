@@ -1,6 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useLang } from "./LangProvider";
 import { Lang } from "@/lib/i18n";
 
@@ -17,11 +18,23 @@ const links = [
 export default function BurgerMenu() {
   const [open, setOpen] = useState(false);
   const { t, lang, setLang } = useLang();
+  const pathname = usePathname();
+
+  // Ferme le menu quand on change de page
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  // Bloque le scroll du body quand le menu est ouvert
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [open]);
 
   const langs: { code: Lang; label: string }[] = [
-    { code: "fr", label: "FR" },
-    { code: "en", label: "EN" },
-    { code: "ar", label: "AR" },
+    { code: "fr", label: "Français" },
+    { code: "en", label: "English" },
+    { code: "ar", label: "العربية" },
   ];
 
   return (
@@ -31,7 +44,7 @@ export default function BurgerMenu() {
         onClick={() => setOpen(true)}
         aria-label="Menu"
         className="w-11 h-11 rounded-xl bg-emerald flex flex-col items-center justify-center
-                   gap-[5px] hover:bg-emerald-dark transition"
+                   gap-[5px] hover:bg-emerald-dark transition relative z-[901]"
       >
         <span className="w-5 h-[2px] bg-gold rounded" />
         <span className="w-5 h-[2px] bg-gold rounded" />
@@ -39,71 +52,77 @@ export default function BurgerMenu() {
       </button>
 
       {/* Overlay */}
-      <div
-        onClick={() => setOpen(false)}
-        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-[999]
-                    transition-opacity duration-300
-                    ${open ? "opacity-100" : "opacity-0 pointer-events-none"}`}
-      />
+      {open && (
+        <div
+          onClick={() => setOpen(false)}
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[998]"
+        />
+      )}
 
       {/* Drawer */}
       <aside
-        className={`fixed top-0 right-0 h-full w-[85%] max-w-[380px] z-[1000]
+        className={`fixed top-0 right-0 h-screen w-[85%] max-w-[380px] z-[999]
                     bg-gradient-to-b from-emerald-dark to-emerald
-                    p-7 pt-20 overflow-y-auto
+                    flex flex-col
                     transition-transform duration-300 ease-out
                     ${open ? "translate-x-0" : "translate-x-full"}`}
       >
-        {/* Bouton fermer */}
-        <button
-          onClick={() => setOpen(false)}
-          aria-label="Fermer"
-          className="absolute top-5 right-5 w-10 h-10 rounded-full
-                     bg-white/10 hover:bg-white/20 flex items-center justify-center
-                     text-gold text-xl"
-        >
-          ×
-        </button>
-
-        {/* Titre */}
-        <div className="font-amiri font-bold text-gold text-2xl mb-8 text-center" dir="rtl">
-          بصيرة
+        {/* Header avec bouton fermer */}
+        <div className="flex items-center justify-between p-6 border-b border-white/10 shrink-0">
+          <div className="font-amiri font-bold text-gold text-2xl" dir="rtl">
+            بصيرة
+          </div>
+          <button
+            onClick={() => setOpen(false)}
+            aria-label="Fermer"
+            className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20
+                       flex items-center justify-center text-gold text-2xl leading-none"
+          >
+            ×
+          </button>
         </div>
 
-        {/* Sélecteur de langue */}
-        <div className="flex gap-2 justify-center mb-8">
-          {langs.map((l) => (
-            <button
-              key={l.code}
-              onClick={() => setLang(l.code)}
-              className={`px-4 py-1.5 rounded-full text-xs font-semibold transition
-                ${lang === l.code
-                  ? "bg-gold text-emerald-dark"
-                  : "bg-white/10 text-white hover:bg-white/20"}`}
-            >
-              {l.label}
-            </button>
-          ))}
-        </div>
+        {/* Contenu scrollable */}
+        <div className="flex-1 overflow-y-auto p-6">
+          {/* Sélecteur de langue */}
+          <div className="mb-6">
+            <div className="text-xs text-white/50 uppercase tracking-widest mb-3">
+              {lang === "ar" ? "اللغة" : lang === "en" ? "Language" : "Langue"}
+            </div>
+            <div className="flex gap-2">
+              {langs.map((l) => (
+                <button
+                  key={l.code}
+                  onClick={() => setLang(l.code)}
+                  className={`flex-1 px-3 py-2 rounded-xl text-xs font-semibold transition
+                    ${lang === l.code
+                      ? "bg-gold text-emerald-dark"
+                      : "bg-white/10 text-white hover:bg-white/20"}`}
+                >
+                  {l.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
-        {/* Liens */}
-        <nav className="space-y-1">
-          {links.map(({ key, href }) => (
-            <Link
-              key={key}
-              href={href}
-              onClick={() => setOpen(false)}
-              className="block px-5 py-3.5 rounded-2xl text-white/90 font-medium
-                         hover:bg-white/10 hover:text-gold transition"
-            >
-              {t.nav[key]}
-            </Link>
-          ))}
-        </nav>
+          {/* Liens */}
+          <nav className="space-y-1">
+            {links.map(({ key, href }) => (
+              <Link
+                key={key}
+                href={href}
+                className="block px-5 py-3.5 rounded-2xl text-white/90 font-medium
+                           hover:bg-white/10 hover:text-gold transition"
+              >
+                {t.nav[key]}
+              </Link>
+            ))}
+          </nav>
 
-        {/* Pied */}
-        <div className="mt-10 pt-6 border-t border-white/10 text-center">
-          <p className="text-xs text-white/50">AL BASIRAH © 2026</p>
+          {/* Pied */}
+          <div className="mt-10 pt-6 border-t border-white/10 text-center">
+            <p className="text-xs text-white/50">AL BASIRAH © 2026</p>
+          </div>
         </div>
       </aside>
     </>
