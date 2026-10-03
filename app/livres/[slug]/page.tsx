@@ -27,7 +27,11 @@ type Livre = {
   annee: string | null;
 };
 
-export default function LivrePage({ params }: { params: Promise<{ slug: string }> }) {
+export default function LivrePage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = use(params);
   const { lang } = useLang();
   const [livre, setLivre] = useState<Livre | null>(null);
@@ -37,7 +41,10 @@ export default function LivrePage({ params }: { params: Promise<{ slug: string }
   useEffect(() => {
     (async () => {
       const { data, error } = await supabase
-        .from("livres").select("*").eq("slug", slug).single();
+        .from("livres")
+        .select("*")
+        .eq("slug", slug)
+        .single();
       if (error) console.error("Erreur livre:", error);
       setLivre(data);
       setLoading(false);
@@ -66,35 +73,47 @@ export default function LivrePage({ params }: { params: Promise<{ slug: string }
   }
 
   const getTitre = () =>
-    lang === "ar" ? livre.titre_ar || livre.titre_fr
-      : lang === "en" ? livre.titre_en || livre.titre_fr
+    lang === "ar"
+      ? livre.titre_ar || livre.titre_fr
+      : lang === "en"
+      ? livre.titre_en || livre.titre_fr
       : livre.titre_fr;
 
   const getAuteur = () =>
-    lang === "ar" ? livre.auteur_ar || livre.auteur_fr
-      : lang === "en" ? livre.auteur_en || livre.auteur_fr
+    lang === "ar"
+      ? livre.auteur_ar || livre.auteur_fr
+      : lang === "en"
+      ? livre.auteur_en || livre.auteur_fr
       : livre.auteur_fr;
 
   const getDesc = () =>
-    lang === "ar" ? livre.description_ar || livre.description_fr
-      : lang === "en" ? livre.description_en || livre.description_fr
+    lang === "ar"
+      ? livre.description_ar || livre.description_fr
+      : lang === "en"
+      ? livre.description_en || livre.description_fr
       : livre.description_fr;
 
   return (
     <main className="px-[6%] pt-24 pb-40 max-w-[1200px] mx-auto">
-
-      <Link href="/livres"
-        className="text-emerald text-sm font-semibold hover:underline inline-flex items-center gap-1">
+      <Link
+        href="/livres"
+        className="text-emerald text-sm font-semibold hover:underline inline-flex items-center gap-1"
+      >
         ← Retour aux livres
       </Link>
 
       <div className="mt-6 mb-10 grid md:grid-cols-[280px_1fr] gap-8">
-        <div className="bg-gradient-to-br from-emerald to-emerald-dark rounded-[28px]
+        <div
+          className="bg-gradient-to-br from-emerald to-emerald-dark rounded-[28px]
                         aspect-[3/4] flex items-center justify-center
-                        overflow-hidden shadow-[0_30px_60px_rgba(13,92,74,0.2)]">
+                        overflow-hidden shadow-[0_30px_60px_rgba(13,92,74,0.2)]"
+        >
           {livre.couverture_url ? (
-            <img src={livre.couverture_url} alt={getTitre()}
-              className="w-full h-full object-cover" />
+            <img
+              src={livre.couverture_url}
+              alt={getTitre()}
+              className="w-full h-full object-cover"
+            />
           ) : (
             <div className="text-gold flex flex-col items-center gap-4">
               <IconLivre size={64} />
@@ -107,9 +126,11 @@ export default function LivrePage({ params }: { params: Promise<{ slug: string }
 
         <div className="flex flex-col">
           {livre.categorie && (
-            <div className="inline-block self-start px-3 py-1 rounded-full
+            <div
+              className="inline-block self-start px-3 py-1 rounded-full
                             bg-emerald/8 text-emerald text-[0.7rem] font-bold
-                            uppercase tracking-wider mb-3">
+                            uppercase tracking-wider mb-3"
+            >
               {livre.categorie}
             </div>
           )}
@@ -149,7 +170,8 @@ export default function LivrePage({ params }: { params: Promise<{ slug: string }
                          bg-emerald text-white font-semibold text-sm
                          hover:bg-emerald-dark transition-all
                          shadow-[0_10px_25px_rgba(13,92,74,0.25)]
-                         hover:-translate-y-0.5">
+                         hover:-translate-y-0.5"
+            >
               <IconBook size={18} />
               Lire maintenant
             </button>
@@ -161,7 +183,8 @@ export default function LivrePage({ params }: { params: Promise<{ slug: string }
               className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl
                          bg-white text-emerald-dark font-semibold text-sm
                          border-2 border-emerald/15
-                         hover:border-gold hover:text-gold transition-all">
+                         hover:border-gold hover:text-gold transition-all"
+            >
               <IconDownload size={18} />
               Télécharger le PDF
             </a>
@@ -170,12 +193,18 @@ export default function LivrePage({ params }: { params: Promise<{ slug: string }
       </div>
 
       {showReader && (
-        <div className="bg-white rounded-[28px] overflow-hidden border border-emerald/10
-                        shadow-[0_25px_60px_rgba(13,92,74,0.1)]">
+        <div
+          className="bg-white rounded-[28px] overflow-hidden border border-emerald/10
+                        shadow-[0_25px_60px_rgba(13,92,74,0.1)]"
+        >
           <div className="px-6 py-4 border-b border-emerald/10 flex items-center justify-between">
-            <div className="font-bold text-emerald-dark text-sm">Lecture en ligne</div>
-            <button onClick={() => setShowReader(false)}
-              className="text-gray-400 hover:text-terracotta text-sm font-semibold">
+            <div className="font-bold text-emerald-dark text-sm">
+              Lecture en ligne
+            </div>
+            <button
+              onClick={() => setShowReader(false)}
+              className="text-gray-400 hover:text-terracotta text-sm font-semibold"
+            >
               Fermer ✕
             </button>
           </div>
@@ -193,8 +222,9 @@ export default function LivrePage({ params }: { params: Promise<{ slug: string }
         <div className="bg-emerald/5 rounded-3xl p-6 text-center border border-emerald/10">
           <p className="text-sm text-gray-600">
             <strong className="text-emerald-dark">Astuce :</strong> clique sur
-            <strong> « Lire maintenant »</strong> pour ouvrir le livre directement dans la page,
-            ou clique sur <strong>« Télécharger »</strong> pour l'avoir sur ton appareil.
+            <strong> « Lire maintenant »</strong> pour ouvrir le livre directement
+            dans la page, ou clique sur <strong>« Télécharger »</strong> pour
+            l'avoir sur ton appareil.
           </p>
         </div>
       )}
