@@ -28,11 +28,14 @@ export default function BottomNav() {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-[950]
-                    bg-white/95 backdrop-blur-xl
-                    border-t border-emerald/10
-                    shadow-[0_-10px_30px_rgba(13,92,74,0.08)]
-                    px-[6%] py-2.5">
+    <nav
+      className="fixed bottom-0 left-0 right-0 z-[950]
+                 bg-white/95 backdrop-blur-xl
+                 border-t border-emerald/10
+                 shadow-[0_-10px_30px_rgba(13,92,74,0.08)]
+                 px-[6%] pt-2.5 pb-4"
+      style={{ paddingBottom: "calc(16px + env(safe-area-inset-bottom))" }}
+    >
       <div className="max-w-[600px] mx-auto flex justify-between items-center gap-1">
         {items.map(({ id, label, Icon, center, href }) => {
           const isActive = pathname === href;
