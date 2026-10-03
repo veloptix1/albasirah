@@ -23,7 +23,7 @@ export default function Navbar() {
                        flex justify-between items-center
                        bg-cream/90 backdrop-blur-md
                        border-b border-emerald/10">
-      <Link href="/" className="flex items-center gap-3 no-underline">
+      <Link href={connected ? "/dashboard" : "/"} className="flex items-center gap-3 no-underline">
         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald to-emerald-dark
                         flex items-center justify-center
                         shadow-[0_4px_14px_rgba(13,92,74,0.3)]">
@@ -41,11 +41,11 @@ export default function Navbar() {
 
       <div className="flex items-center gap-3">
         <Link
-          href={connected ? "/profil" : "/auth"}
+          href={connected ? "/dashboard" : "/auth"}
           className="hidden sm:block px-5 py-2 rounded-full bg-emerald text-white text-xs
                      font-semibold hover:bg-emerald-dark transition"
         >
-          {connected ? "Mon profil" : "Connexion"}
+          {connected ? "Dashboard" : "Connexion"}
         </Link>
         <BurgerMenu />
       </div>
