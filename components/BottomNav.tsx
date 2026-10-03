@@ -1,19 +1,31 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 import { IconHome, IconSpeaker, IconSearch, IconBook, IconUser } from "./icons";
-
-const items = [
-  { id: "home",    label: "Accueil",  Icon: IconHome,    href: "/" },
-  { id: "audio",   label: "Audio",    Icon: IconSpeaker, href: "/audio" },
-  { id: "explore", label: "Explorer", Icon: IconSearch,  href: "/explorer", center: true },
-  { id: "hadiths", label: "Hadiths",  Icon: IconBook,    href: "/hadiths" },
-  { id: "profil",  label: "Profil",   Icon: IconUser,    href: "/profil" },
-];
 
 export default function BottomNav() {
   const pathname = usePathname();
   const router = useRouter();
+  const [connected, setConnected] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setConnected(!!data.session);
+    });
+    const { data: listener } = supabase.auth.onAuthStateChange((_e, session) => {
+      setConnected(!!session);
+    });
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  const items = [
+    { id: "home",    label: "Accueil",  Icon: IconHome,    href: connected ? "/dashboard" : "/" },
+    { id: "audio",   label: "Audio",    Icon: IconSpeaker, href: "/audio" },
+    { id: "explore", label: "Explorer", Icon: IconSearch,  href: "/dashboard", center: true },
+    { id: "hadiths", label: "Hadiths",  Icon: IconBook,    href: "/hadiths" },
+    { id: "profil",  label: "Profil",   Icon: IconUser,    href: connected ? "/profil" : "/auth" },
+  ];
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-[950]
