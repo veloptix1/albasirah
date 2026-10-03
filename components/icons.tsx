@@ -70,3 +70,99 @@ export const IconCheck = ({ size = 16 }) => (
     <path d="M20 6L9 17l-5-5"/>
   </svg>
 );
+
+/* ============================================
+   NOUVELLES ICÔNES POUR LES CATÉGORIES
+   ============================================ */
+
+// Croyance (Aqida) — cœur avec étoile
+export const IconAqida = ({ size = 26 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+       stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 00-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 000-7.8z"/>
+  </svg>
+);
+
+// Prière (Salat) — mosquée
+export const IconSalat = ({ size = 26 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+       stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2 21h20M4 21V11l8-6 8 6v10"/>
+    <path d="M9 21v-5a3 3 0 016 0v5"/>
+    <path d="M12 5V2"/>
+  </svg>
+);
+
+// Livre — livre ouvert
+export const IconLivre = ({ size = 26 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+       stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/>
+    <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>
+  </svg>
+);
+
+// Rapporteurs — parchemin
+export const IconParchemin = ({ size = 26 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+       stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 4h13a3 3 0 013 3v13a2 2 0 01-2 2H6a2 2 0 01-2-2z"/>
+    <path d="M8 8h8M8 12h8M8 16h5"/>
+  </svg>
+);
+
+// Prophètes — étoile
+export const IconProphetes = ({ size = 26 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+       stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 2l2.9 6.9L22 10l-5.5 4.7L18.2 22 12 18.3 5.8 22l1.7-7.3L2 10l7.1-1.1z"/>
+  </svg>
+);
+
+// Sahaba — mains serrées
+export const IconSahaba = ({ size = 26 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+       stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M11 17l-2 2a2 2 0 01-3-3l4-4"/>
+    <path d="M13 17l2 2a2 2 0 003-3l-4-4"/>
+    <path d="M8 10l3-3a2 2 0 013 0l3 3"/>
+    <path d="M12 4v3"/>
+  </svg>
+);
+
+// Biographie — personne avec livre
+export const IconBio = ({ size = 26 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+       stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="8" r="4"/>
+    <path d="M4 21v-2a4 4 0 014-4h1"/>
+    <path d="M20 21v-2a4 4 0 00-3-3.87"/>
+    <path d="M17 21l-3-2 3-2"/>
+  </svg>
+);
+
+// Tafsir — livre avec loupe
+export const IconTafsir = ({ size = 26 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+       stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 4h10a3 3 0 013 3v13H7a3 3 0 01-3-3z"/>
+    <path d="M4 17h13"/>
+    <circle cx="17" cy="15" r="3"/>
+    <path d="M22 20l-2-2"/>
+  </svg>
+);
+
+// Flèche vers la droite
+export const IconArrowRight = ({ size = 16 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
+       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M5 12h14M12 5l7 7-7 7"/>
+  </svg>
+);
+
+// Sparkles pour le dashboard
+export const IconSparkle = ({ size = 18 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 2l1.5 6.5L20 10l-6.5 1.5L12 18l-1.5-6.5L4 10l6.5-1.5z"/>
+  </svg>
+);
