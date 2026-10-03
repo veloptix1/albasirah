@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { IconMosque } from "./icons";
+import BurgerMenu from "./BurgerMenu";
 
 export default function Navbar() {
   const [connected, setConnected] = useState(false);
@@ -18,7 +19,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-[900] px-[6%] py-4
+    <header className="fixed top-0 left-0 right-0 z-[900] px-[6%] py-3
                        flex justify-between items-center
                        bg-cream/90 backdrop-blur-md
                        border-b border-emerald/10">
@@ -29,7 +30,7 @@ export default function Navbar() {
           <IconMosque size={22} color="#d4af37" />
         </div>
         <div className="leading-none">
-          <div className="font-extrabold text-emerald-dark tracking-[2px] text-[1.1rem]">
+          <div className="font-extrabold text-emerald-dark tracking-[2px] text-[1.05rem]">
             AL BASIRAH
           </div>
           <small className="block text-[0.55rem] tracking-[2.5px] text-gold font-medium mt-1">
@@ -38,11 +39,16 @@ export default function Navbar() {
         </div>
       </Link>
 
-      <Link href={connected ? "/profil" : "/auth"}
-        className="px-5 py-2 rounded-full bg-emerald text-white text-xs
-                   font-semibold hover:bg-emerald-dark transition">
-        {connected ? "Mon profil" : "Connexion"}
-      </Link>
+      <div className="flex items-center gap-3">
+        <Link
+          href={connected ? "/profil" : "/auth"}
+          className="hidden sm:block px-5 py-2 rounded-full bg-emerald text-white text-xs
+                     font-semibold hover:bg-emerald-dark transition"
+        >
+          {connected ? "Mon profil" : "Connexion"}
+        </Link>
+        <BurgerMenu />
+      </div>
     </header>
   );
 }
