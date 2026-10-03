@@ -4,7 +4,7 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { useLang } from "@/components/LangProvider";
 import {
-  IconLivre, IconUser, IconArrowRight, IconDownload, IconBook,
+  IconLivre, IconUser, IconBook, IconDownload,
 } from "@/components/icons";
 
 type Livre = {
@@ -26,33 +26,45 @@ type Livre = {
 };
 
 export default function LivresPage() {
-  const { t, lang } = useLang();
+  const { lang } = useLang();
   const [livres, setLivres] = useState<Livre[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
-      const { data } = await supabase
-        .from("livres").select("*").order("ordre", { ascending: true });
+      const { data, error } = await supabase
+        .from("livres")
+        .select("*")
+        .order("ordre", { ascending: true });
+      if (error) console.error("Erreur livres:", error);
       setLivres(data || []);
       setLoading(false);
     })();
   }, []);
 
   const getTitre = (l: Livre) =>
-    lang === "ar" ? l.titre_ar || l.titre_fr : lang === "en" ? l.titre_en || l.titre_fr : l.titre_fr;
+    lang === "ar"
+      ? l.titre_ar || l.titre_fr
+      : lang === "en"
+      ? l.titre_en || l.titre_fr
+      : l.titre_fr;
 
   const getAuteur = (l: Livre) =>
-    lang === "ar" ? l.auteur_ar || l.auteur_fr : lang === "en" ? l.auteur_en || l.auteur_fr : l.auteur_fr;
+    lang === "ar"
+      ? l.auteur_ar || l.auteur_fr
+      : lang === "en"
+      ? l.auteur_en || l.auteur_fr
+      : l.auteur_fr;
 
   return (
     <main className="px-[6%] pt-24 pb-40 max-w-[1200px] mx-auto">
-
-      <Link href="/dashboard" className="text-emerald text-sm font-semibold hover:underline">
+      <Link
+        href="/dashboard"
+        className="text-emerald text-sm font-semibold hover:underline"
+      >
         ← Retour
       </Link>
 
-      {/* En-tête */}
       <div className="mt-6 mb-12">
         <div className="flex items-center gap-3 mb-3">
           <div className="w-12 h-12 rounded-2xl bg-gold/15 flex items-center justify-center text-gold">
@@ -66,12 +78,11 @@ export default function LivresPage() {
           Nos Livres
         </h1>
         <p className="text-gray-500 max-w-2xl">
-          Découvrez, lisez en ligne ou téléchargez les livres islamiques
-          de nos savants.
+          Découvrez, lisez en ligne ou téléchargez les livres islamiques de nos
+          savants.
         </p>
       </div>
 
-      {/* Grille différente : carte large par livre */}
       {loading ? (
         <p className="text-gray-400">Chargement...</p>
       ) : livres.length === 0 ? (
@@ -92,9 +103,10 @@ export default function LivresPage() {
                          transition-all"
             >
               <div className="grid md:grid-cols-[220px_1fr] gap-0">
-                {/* Couverture */}
-                <div className="relative aspect-[3/4] md:aspect-auto bg-gradient-to-br from-emerald to-emerald-dark
-                                flex items-center justify-center overflow-hidden">
+                <div
+                  className="relative aspect-[3/4] md:aspect-auto bg-gradient-to-br from-emerald to-emerald-dark
+                                flex items-center justify-center overflow-hidden"
+                >
                   {l.couverture_url ? (
                     <img
                       src={l.couverture_url}
@@ -105,29 +117,34 @@ export default function LivresPage() {
                     <div className="flex flex-col items-center justify-center gap-3 text-gold p-6">
                       <IconLivre size={48} />
                       <div className="text-center text-xs font-semibold uppercase tracking-widest opacity-70">
-                        {t.categories?.livre || "Livre"}
+                        Livre
                       </div>
                     </div>
                   )}
-                  {/* Badge langue */}
-                  <div className="absolute top-4 right-4 px-3 py-1 rounded-full text-[0.65rem]
-                                  font-bold uppercase tracking-wider bg-white/95 text-emerald-dark">
+                  <div
+                    className="absolute top-4 right-4 px-3 py-1 rounded-full text-[0.65rem]
+                                  font-bold uppercase tracking-wider bg-white/95 text-emerald-dark"
+                  >
                     {l.langue.toUpperCase()}
                   </div>
                 </div>
 
-                {/* Contenu */}
                 <div className="p-7 flex flex-col">
                   {l.categorie && (
-                    <div className="inline-block self-start px-3 py-1 rounded-full
+                    <div
+                      className="inline-block self-start px-3 py-1 rounded-full
                                     bg-emerald/8 text-emerald text-[0.7rem] font-bold
-                                    uppercase tracking-wider mb-3">
+                                    uppercase tracking-wider mb-3"
+                    >
                       {l.categorie}
                     </div>
                   )}
 
                   {l.titre_ar && lang !== "ar" && (
-                    <div className="font-amiri text-gold text-base mb-1" dir="rtl">
+                    <div
+                      className="font-amiri text-gold text-base mb-1"
+                      dir="rtl"
+                    >
                       {l.titre_ar}
                     </div>
                   )}
@@ -149,13 +166,11 @@ export default function LivresPage() {
                     </p>
                   )}
 
-                  {/* Méta */}
                   <div className="flex flex-wrap gap-4 text-xs text-gray-400 mb-5">
                     {l.pages && <span>{l.pages} pages</span>}
                     {l.annee && <span>{l.annee}</span>}
                   </div>
 
-                  {/* Boutons d'action */}
                   <div className="flex flex-wrap gap-3 mt-auto">
                     <Link
                       href={`/livres/${l.slug}`}
@@ -189,12 +204,6 @@ export default function LivresPage() {
           ))}
         </div>
       )}
-
-      <div className="mt-12 text-center">
-        <Link href="/admin/livres" className="text-xs text-gray-400 hover:text-emerald">
-          + Gérer les livres (admin)
-        </Link>
-      </div>
     </main>
   );
 }
