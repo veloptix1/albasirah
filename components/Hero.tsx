@@ -9,84 +9,70 @@ const audios = [
 export default function Hero() {
   return (
     <section className="relative min-h-screen flex items-center justify-center
-                        px-[6%] pt-32 pb-16 overflow-hidden
+                        px-[6%] pt-28 pb-24 overflow-hidden
                         bg-gradient-to-b from-cream to-[#f0e9d9]">
 
-      {/* Blobs décoratifs */}
-      <div className="absolute w-[400px] h-[400px] rounded-full blur-[80px] opacity-35
-                      bg-emerald -top-24 -left-24" />
-      <div className="absolute w-[350px] h-[350px] rounded-full blur-[80px] opacity-35
-                      bg-gold -bottom-20 -right-20" />
-      <div className="absolute w-[250px] h-[250px] rounded-full blur-[80px] opacity-20
-                      bg-terracotta top-[40%] right-[20%]" />
+      <div className="absolute w-[400px] h-[400px] rounded-full blur-[80px] opacity-30
+                      bg-emerald -top-24 -left-24 pointer-events-none" />
+      <div className="absolute w-[350px] h-[350px] rounded-full blur-[80px] opacity-30
+                      bg-gold -bottom-20 -right-20 pointer-events-none" />
 
       <div className="relative z-10 max-w-[1200px] w-full grid md:grid-cols-2 gap-12 items-center">
         {/* Texte gauche */}
         <div className="text-center md:text-left">
-          <div className="inline-flex items-center gap-2 bg-white border border-emerald/12
-                          px-4 py-2 rounded-full text-xs font-semibold text-emerald
-                          tracking-wider mb-6 shadow-sm">
-            <IconStar size={14} color="#d4af37" />
+          <div className="inline-flex items-center gap-2 bg-white border border-emerald/10
+                          px-4 py-2 rounded-full text-[0.7rem] sm:text-xs font-semibold
+                          text-emerald tracking-wider mb-6 shadow-sm">
+            <IconStar size={12} color="#d4af37" />
             APPLICATION ISLAMIQUE AUDIO
           </div>
 
-          <h1 className="font-amiri font-bold text-emerald-dark
-                         text-[clamp(2.8rem,6vw,4.5rem)] leading-none mb-2">
+          <h1 className="font-amiri font-bold text-emerald-dark leading-[0.95]
+                         text-[2rem] sm:text-[2.8rem] md:text-[3.5rem] lg:text-[4.5rem] mb-2 break-words">
             AL BASIRAH
           </h1>
           <div className="font-amiri font-bold text-gold
-                          text-[clamp(1.5rem,3vw,2.2rem)] mb-6" dir="rtl">
+                          text-[1.3rem] sm:text-[1.6rem] md:text-[1.9rem] lg:text-[2.2rem]
+                          mb-6" dir="rtl">
             بصيرة
           </div>
 
-          <p className="text-gray-500 text-base max-w-[520px] mb-9 mx-auto md:mx-0">
+          <p className="text-gray-500 text-sm sm:text-base max-w-[520px] mb-9 mx-auto md:mx-0">
             Écoutez la parole des savants, découvrez les hadiths authentiques
             et nourrissez votre âme. Une bibliothèque audio islamique en
             français et en arabe.
           </p>
 
           <div className="flex gap-3 flex-wrap justify-center md:justify-start">
-            <a href="#" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full
-                                   bg-emerald text-white font-semibold text-sm
-                                   shadow-[0_10px_25px_rgba(13,92,74,0.25)]
-                                   hover:bg-emerald-dark hover:-translate-y-0.5
-                                   transition-all">
+            <a href="/audio" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full
+                                        bg-emerald text-white font-semibold text-sm
+                                        shadow-[0_10px_25px_rgba(13,92,74,0.25)]
+                                        hover:bg-emerald-dark hover:-translate-y-0.5
+                                        transition-all">
               <IconPlay size={16} color="#fff" />
               Commencer l'écoute
             </a>
-            <a href="#" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full
-                                   bg-white text-emerald-dark font-semibold text-sm
-                                   border-2 border-emerald/15
-                                   hover:border-gold hover:text-gold transition-all">
-              En savoir plus
+            <a href="/dashboard" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full
+                                             bg-white text-emerald-dark font-semibold text-sm
+                                             border-2 border-emerald/15
+                                             hover:border-gold hover:text-gold transition-all">
+              Mon espace
             </a>
           </div>
         </div>
 
         {/* Carte audio droite */}
-        <div className="relative flex justify-center">
-          <div className="absolute top-[10%] -left-4 bg-white rounded-2xl px-3.5 py-2.5
-                          flex items-center gap-2 shadow-xl animate-float hidden md:flex">
-            <IconStar size={16} color="#d4af37" />
-            <span className="text-xs font-semibold text-emerald-dark">500+ audios</span>
-          </div>
-          <div className="absolute bottom-[15%] -right-4 bg-white rounded-2xl px-3.5 py-2.5
-                          flex items-center gap-2 shadow-xl animate-float hidden md:flex"
-               style={{ animationDelay: "1.5s" }}>
-            <span className="text-terracotta"><IconCheck size={16} /></span>
-            <span className="text-xs font-semibold text-emerald-dark">100% authentique</span>
-          </div>
-
-          <div className="bg-white rounded-[28px] p-7 w-full max-w-[380px]
+        <div className="relative flex justify-center mt-8 md:mt-0">
+          <div className="bg-white rounded-[28px] p-5 sm:p-7 w-full max-w-[360px]
                           shadow-[0_30px_60px_rgba(13,92,74,0.15)]
                           relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1.5
                             bg-gradient-to-r from-emerald via-gold to-terracotta" />
 
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-13 h-13 rounded-2xl bg-gradient-to-br from-emerald to-emerald-light
-                              flex items-center justify-center p-3">
-                <IconSpeaker size={24} />
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald to-emerald-light
+                              flex items-center justify-center shrink-0">
+                <IconSpeaker size={22} />
               </div>
               <div>
                 <div className="font-bold text-emerald-dark text-sm">Bibliothèque Audio</div>
@@ -95,22 +81,22 @@ export default function Hero() {
             </div>
 
             {audios.map((a, i) => (
-              <div key={i} className="flex items-center gap-3.5 p-3.5 rounded-2xl bg-cream
-                                      mb-3 hover:bg-[#f0e9d9] hover:translate-x-1
+              <div key={i} className="flex items-center gap-3 p-3 rounded-2xl bg-cream
+                                      mb-2.5 hover:bg-[#f0e9d9] hover:translate-x-1
                                       transition-all cursor-pointer">
-                <div className="w-10 h-10 rounded-full bg-gold flex items-center justify-center
+                <div className="w-9 h-9 rounded-full bg-gold flex items-center justify-center
                                 shadow-[0_4px_10px_rgba(212,175,55,0.35)] shrink-0">
-                  <IconPlay size={14} />
+                  <IconPlay size={12} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-semibold text-emerald-dark truncate">{a.t}</div>
-                  <div className="text-xs text-gray-500 truncate">{a.a}</div>
+                  <div className="text-xs sm:text-sm font-semibold text-emerald-dark truncate">{a.t}</div>
+                  <div className="text-[0.68rem] text-gray-500 truncate">{a.a}</div>
                 </div>
-                <div className="flex items-end gap-[3px] h-5">
+                <div className="flex items-end gap-[2px] h-4">
                   {[0,1,2,3].map((n) => (
                     <span key={n}
-                          className="w-[3px] bg-emerald rounded-sm animate-eq"
-                          style={{ animationDelay: `${n * 0.15}s`, height: `${8 + (n % 3) * 4}px` }} />
+                          className="w-[2.5px] bg-emerald rounded-sm animate-eq"
+                          style={{ animationDelay: `${n * 0.15}s`, height: `${6 + (n % 3) * 3}px` }} />
                   ))}
                 </div>
               </div>
