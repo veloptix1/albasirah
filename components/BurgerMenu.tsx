@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLang } from "./LangProvider";
 import { Lang } from "@/lib/i18n";
+import { supabase } from "@/lib/supabase";
 
 const links = [
   { key: "live", href: "/live" },
@@ -17,15 +18,27 @@ const links = [
 
 export default function BurgerMenu() {
   const [open, setOpen] = useState(false);
+  const [connected, setConnected] = useState(false);
   const { t, lang, setLang } = useLang();
   const pathname = usePathname();
 
-  // Ferme le menu quand on change de page
+  // Détecte la connexion
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setConnected(!!data.session);
+    });
+    const { data: listener } = supabase.auth.onAuthStateChange((_e, session) => {
+      setConnected(!!session);
+    });
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  // Ferme le menu au changement de page
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
 
-  // Bloque le scroll du body quand le menu est ouvert
+  // Bloque le scroll quand ouvert
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -39,7 +52,6 @@ export default function BurgerMenu() {
 
   return (
     <>
-      {/* Bouton burger */}
       <button
         onClick={() => setOpen(true)}
         aria-label="Menu"
@@ -51,7 +63,6 @@ export default function BurgerMenu() {
         <span className="w-3 h-[2px] bg-gold rounded self-start ml-3" />
       </button>
 
-      {/* Overlay */}
       {open && (
         <div
           onClick={() => setOpen(false)}
@@ -59,7 +70,6 @@ export default function BurgerMenu() {
         />
       )}
 
-      {/* Drawer */}
       <aside
         className={`fixed top-0 right-0 h-screen w-[85%] max-w-[380px] z-[999]
                     bg-gradient-to-b from-emerald-dark to-emerald
@@ -67,7 +77,6 @@ export default function BurgerMenu() {
                     transition-transform duration-300 ease-out
                     ${open ? "translate-x-0" : "translate-x-full"}`}
       >
-        {/* Header avec bouton fermer */}
         <div className="flex items-center justify-between p-6 border-b border-white/10 shrink-0">
           <div className="font-amiri font-bold text-gold text-2xl" dir="rtl">
             بصيرة
@@ -82,12 +91,11 @@ export default function BurgerMenu() {
           </button>
         </div>
 
-        {/* Contenu scrollable */}
         <div className="flex-1 overflow-y-auto p-6">
-          {/* Sélecteur de langue */}
+          {/* Langue */}
           <div className="mb-6">
             <div className="text-xs text-white/50 uppercase tracking-widest mb-3">
-              {lang === "ar" ? "اللغة" : lang === "en" ? "Language" : "Langue"}
+              {t.burger.language}
             </div>
             <div className="flex gap-2">
               {langs.map((l) => (
@@ -105,7 +113,18 @@ export default function BurgerMenu() {
             </div>
           </div>
 
-          {/* Liens */}
+          {/* Lien Dashboard (seulement si connecté) */}
+          {connected && (
+            <Link
+              href="/dashboard"
+              className="block px-5 py-3.5 rounded-2xl text-gold font-semibold
+                         bg-white/5 hover:bg-white/10 transition mb-3"
+            >
+              📊 {t.nav.dashboard}
+            </Link>
+          )}
+
+          {/* Liens classiques */}
           <nav className="space-y-1">
             {links.map(({ key, href }) => (
               <Link
@@ -119,7 +138,6 @@ export default function BurgerMenu() {
             ))}
           </nav>
 
-          {/* Pied */}
           <div className="mt-10 pt-6 border-t border-white/10 text-center">
             <p className="text-xs text-white/50">AL BASIRAH © 2026</p>
           </div>
