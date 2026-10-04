@@ -47,7 +47,6 @@ export default function CoranClient() {
     })();
   }, []);
 
-  // Bloque le scroll quand un menu est ouvert
   useEffect(() => {
     document.body.style.overflow = openMenuFor !== null ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -98,7 +97,7 @@ export default function CoranClient() {
         </div>
         <input
           type="text"
-          placeholder="Rechercher par numéro, nom ou transcription..."
+          placeholder="Rechercher une sourate..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-full pl-14 pr-5 py-4 rounded-2xl border-2 border-emerald/10
@@ -125,7 +124,7 @@ export default function CoranClient() {
               <div key={s.numero}
                 className="bg-white rounded-2xl border border-emerald/5
                            hover:border-emerald/15 transition-all">
-                <div className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4">
+                <div className="flex items-center gap-2 sm:gap-4 p-3 sm:p-4">
 
                   {/* Numéro */}
                   <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-emerald/8
@@ -146,26 +145,33 @@ export default function CoranClient() {
                       <span className="font-amiri" dir="rtl">{s.nom_ar}</span>
                       <span className="hidden sm:inline">·</span>
                       <span className="hidden sm:inline">{s.versets} versets</span>
-                      <span className="hidden sm:inline">·</span>
-                      <span className="hidden sm:inline">{s.type}</span>
                     </div>
                   </Link>
 
-                  {/* Menu burger 3 traits */}
+                  {/* Menu burger - VISIBLE et STYLÉ */}
                   <button
                     onClick={() => hasAudio && setOpenMenuFor(s.numero)}
-                    aria-label="Récitateurs"
-                    className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex flex-col
-                                items-center justify-center gap-[3px] sm:gap-[4px]
+                    aria-label={hasAudio ? "Voir les récitateurs" : "Aucun audio"}
+                    className={`relative w-10 h-10 sm:w-11 sm:h-11 rounded-xl
+                                flex flex-col items-center justify-center gap-[3px]
                                 transition shrink-0
                       ${hasAudio
-                        ? "bg-emerald text-gold hover:bg-emerald-dark"
-                        : "bg-gray-100 text-gray-300"}`}
-                    disabled={!hasAudio}
+                        ? "bg-emerald text-gold hover:bg-emerald-dark cursor-pointer shadow-md"
+                        : "bg-gray-200 text-gray-400 cursor-not-allowed"}`}
                   >
-                    <span className="w-3.5 h-[2px] bg-current rounded sm:w-4" />
-                    <span className="w-3.5 h-[2px] bg-current rounded sm:w-4" />
-                    <span className="w-2 h-[2px] bg-current rounded self-start ml-2 sm:w-2.5 sm:ml-3" />
+                    <span className="w-4 h-[2px] bg-current rounded" />
+                    <span className="w-4 h-[2px] bg-current rounded" />
+                    <span className="w-2.5 h-[2px] bg-current rounded self-start ml-3" />
+
+                    {/* Badge nombre de récitateurs */}
+                    {hasAudio && (
+                      <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full
+                                       bg-gold text-emerald-dark text-[0.6rem] font-bold
+                                       flex items-center justify-center
+                                       border-2 border-white">
+                        {audiosSourate.length}
+                      </span>
+                    )}
                   </button>
 
                   {/* Bouton télécharger */}
@@ -176,10 +182,9 @@ export default function CoranClient() {
                       target="_blank"
                       rel="noopener noreferrer"
                       title="Télécharger"
-                      className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gold/15 hover:bg-gold/25
-                                 flex items-center justify-center text-gold
-                                 transition shrink-0"
-                    >
+                      className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gold/15
+                                 hover:bg-gold/25 flex items-center justify-center
+                                 text-gold transition shrink-0">
                       <IconDownload size={14} />
                     </a>
                   )}
@@ -190,7 +195,7 @@ export default function CoranClient() {
         </div>
       )}
 
-      {/* Modal récitateurs (plein écran sur mobile) */}
+      {/* Modal récitateurs */}
       {openMenuFor !== null && (
         <div
           className="fixed inset-0 z-[999] bg-black/60 backdrop-blur-sm
@@ -200,14 +205,12 @@ export default function CoranClient() {
           <div
             onClick={(e) => e.stopPropagation()}
             className="w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-3xl
-                       max-h-[80vh] overflow-hidden flex flex-col
-                       shadow-[0_-20px_60px_rgba(0,0,0,0.3)] sm:shadow-[0_20px_60px_rgba(13,92,74,0.3)]"
+                       max-h-[80vh] overflow-hidden flex flex-col"
           >
-            {/* Header */}
             <div className="px-5 py-4 border-b border-emerald/10 flex items-center justify-between shrink-0">
               <div>
                 <div className="text-xs font-bold text-gold uppercase tracking-wider">
-                  Récitateurs disponibles
+                  Récitateurs
                 </div>
                 <div className="text-sm font-semibold text-emerald-dark mt-1">
                   Sourate {openMenuFor}
@@ -217,13 +220,11 @@ export default function CoranClient() {
                 onClick={() => setOpenMenuFor(null)}
                 className="w-9 h-9 rounded-full bg-emerald/8 text-emerald
                            hover:bg-emerald/15 flex items-center justify-center
-                           text-xl leading-none shrink-0"
-              >
+                           text-xl leading-none shrink-0">
                 ×
               </button>
             </div>
 
-            {/* Liste */}
             <div className="overflow-y-auto flex-1">
               {getAudiosFor(openMenuFor).map((a) => (
                 <div key={a.id} className="border-b border-emerald/5 last:border-0">
@@ -241,7 +242,7 @@ export default function CoranClient() {
                       </div>
                       {a.duree && (
                         <div className="text-xs text-gray-500">
-                          {Math.floor(a.duree / 60)} min {a.duree % 60}s
+                          {Math.floor(a.duree / 60)} min
                         </div>
                       )}
                     </div>
@@ -249,12 +250,7 @@ export default function CoranClient() {
 
                   {playingId === a.id && (
                     <div className="px-5 pb-4">
-                      <audio
-                        src={a.audio_url}
-                        controls
-                        autoPlay
-                        className="w-full"
-                      />
+                      <audio src={a.audio_url} controls autoPlay className="w-full" />
                     </div>
                   )}
                 </div>
@@ -263,12 +259,6 @@ export default function CoranClient() {
           </div>
         </div>
       )}
-
-      <div className="mt-12 text-center">
-        <Link href="/admin/coran" className="text-xs text-gray-400 hover:text-emerald">
-          + Gérer les audios du Coran (admin)
-        </Link>
-      </div>
     </main>
   );
 }
