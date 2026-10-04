@@ -1,39 +1,23 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
-import { Lang, t as translate, isRTL } from "@/lib/i18n";
+import { createContext, useContext, useState } from "react";
+
+type Lang = "fr" | "en" | "ar";
 
 type Ctx = {
   lang: Lang;
   setLang: (l: Lang) => void;
-  t: ReturnType<typeof translate>;
+  t: any;
   rtl: boolean;
 };
 
 const LangContext = createContext<Ctx | null>(null);
 
 export function LangProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLangState] = useState<Lang>("fr");
-
-  useEffect(() => {
-    const saved = (localStorage.getItem("lang") as Lang) || "fr";
-    setLangState(saved);
-  }, []);
-
-  const setLang = (l: Lang) => {
-    setLangState(l);
-    localStorage.setItem("lang", l);
-    document.documentElement.dir = isRTL(l) ? "rtl" : "ltr";
-    document.documentElement.lang = l;
-  };
-
-  useEffect(() => {
-    document.documentElement.dir = isRTL(lang) ? "rtl" : "ltr";
-    document.documentElement.lang = lang;
-  }, [lang]);
+  const [lang, setLang] = useState<Lang>("fr");
 
   return (
     <LangContext.Provider
-      value={{ lang, setLang, t: translate(lang), rtl: isRTL(lang) }}
+      value={{ lang, setLang, t: {}, rtl: lang === "ar" }}
     >
       {children}
     </LangContext.Provider>
@@ -42,6 +26,8 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
 
 export function useLang() {
   const ctx = useContext(LangContext);
-  if (!ctx) throw new Error("useLang must be used inside LangProvider");
+  if (!ctx) {
+    return { lang: "fr" as Lang, setLang: () => {}, t: {}, rtl: false };
+  }
   return ctx;
 }
