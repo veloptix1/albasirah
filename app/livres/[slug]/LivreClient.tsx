@@ -95,9 +95,7 @@ export default function LivreClient({ slug }: { slug: string }) {
         ← Retour aux livres
       </Link>
 
-      {/* Fiche du livre */}
       <div className="mt-6 mb-10 grid md:grid-cols-[280px_1fr] gap-8">
-        {/* Couverture */}
         <div className="bg-gradient-to-br from-emerald to-emerald-dark rounded-[28px]
                         aspect-[3/4] flex items-center justify-center
                         overflow-hidden shadow-[0_30px_60px_rgba(13,92,74,0.2)]">
@@ -114,7 +112,6 @@ export default function LivreClient({ slug }: { slug: string }) {
           )}
         </div>
 
-        {/* Infos */}
         <div className="flex flex-col">
           {livre.categorie && (
             <div className="inline-block self-start px-3 py-1 rounded-full
@@ -180,7 +177,6 @@ export default function LivreClient({ slug }: { slug: string }) {
         </div>
       </div>
 
-      {/* Lecteur PDF intégré */}
       {showReader && (
         <div className="bg-white rounded-[28px] overflow-hidden border border-emerald/10
                         shadow-[0_25px_60px_rgba(13,92,74,0.1)]">
@@ -201,7 +197,6 @@ export default function LivreClient({ slug }: { slug: string }) {
         </div>
       )}
 
-      {/* Astuce */}
       {!showReader && (
         <div className="bg-emerald/5 rounded-3xl p-6 text-center border border-emerald/10">
           <p className="text-sm text-gray-600">
