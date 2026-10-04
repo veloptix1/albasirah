@@ -11,12 +11,8 @@ export default function ClientLayoutWrapper({
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith("/admin");
 
-  // Page admin : PAS de Navbar, PAS de BottomNav, PAS de padding
-  if (isAdmin) {
-    return <>{children}</>;
-  }
+  if (isAdmin) return <>{children}</>;
 
-  // Pages publiques : Navbar + BottomNav + padding
   return (
     <>
       <Navbar />
