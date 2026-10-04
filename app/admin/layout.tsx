@@ -9,12 +9,12 @@ import {
 } from "@/components/icons";
 
 const menu = [
-  { href: "/admin",             label: "Tableau de bord", Icon: IconHome },
-  { href: "/admin/savants",     label: "Savants",         Icon: IconUser },
-  { href: "/admin/livres",      label: "Livres",          Icon: IconLivre },
-  { href: "/admin/audios",      label: "Audios",          Icon: IconSpeaker },
-  { href: "/admin/hadiths",     label: "Hadiths",         Icon: IconParchemin },
-  { href: "/admin/utilisateurs",label: "Utilisateurs",    Icon: IconUser },
+  { href: "/admin",              label: "Tableau de bord", Icon: IconHome },
+  { href: "/admin/savants",      label: "Savants",         Icon: IconUser },
+  { href: "/admin/livres",       label: "Livres",          Icon: IconLivre },
+  { href: "/admin/audios",       label: "Audios",          Icon: IconSpeaker },
+  { href: "/admin/hadiths",      label: "Hadiths",         Icon: IconParchemin },
+  { href: "/admin/utilisateurs", label: "Utilisateurs",    Icon: IconUser },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -22,6 +22,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const [loading, setLoading] = useState(true);
   const [authorized, setAuthorized] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -42,7 +43,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-cream">
         <p className="text-emerald">Vérification des droits...</p>
       </div>
     );
@@ -52,7 +53,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="min-h-screen bg-cream flex">
-      {/* Sidebar */}
+
+      {/* Sidebar Desktop */}
       <aside className="hidden lg:flex flex-col w-64 bg-emerald-dark text-white
                         fixed top-0 left-0 h-screen z-[900]">
         <div className="p-6 border-b border-white/10">
@@ -103,10 +105,63 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
       </aside>
 
-      {/* Contenu */}
-      <div className="flex-1 lg:ml-64">
+      {/* Top bar mobile */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-[900] bg-emerald-dark text-white
+                      px-4 py-3 flex items-center justify-between">
+        <Link href="/admin" className="flex items-center gap-2 no-underline text-white">
+          <div className="w-8 h-8 rounded-lg bg-gold/20 flex items-center justify-center">
+            <IconMosque size={16} color="#d4af37" />
+          </div>
+          <span className="font-bold text-sm tracking-wider">ADMIN</span>
+        </Link>
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="w-9 h-9 rounded-lg bg-white/10 flex items-center justify-center"
+        >
+          <span className="text-gold text-xl leading-none">{menuOpen ? "×" : "☰"}</span>
+        </button>
+      </div>
+
+      {/* Menu mobile déroulant */}
+      {menuOpen && (
+        <div className="lg:hidden fixed top-[56px] left-0 right-0 z-[900] bg-emerald-dark
+                        text-white p-4 space-y-1 max-h-[calc(100vh-56px)] overflow-y-auto">
+          {menu.map(({ href, label, Icon }) => {
+            const active = pathname === href ||
+              (href !== "/admin" && pathname.startsWith(href));
+            return (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setMenuOpen(false)}
+                className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-medium
+                            transition-all no-underline
+                  ${active
+                    ? "bg-gold text-emerald-dark font-bold"
+                    : "text-white/70 hover:bg-white/5 hover:text-white"}`}
+              >
+                <Icon size={18} />
+                {label}
+              </Link>
+            );
+          })}
+          <Link
+            href="/dashboard"
+            className="flex items-center justify-between px-4 py-3 rounded-2xl
+                       bg-white/5 text-white/70 text-sm hover:bg-white/10
+                       hover:text-white transition no-underline"
+          >
+            Retour à l'app
+            <IconArrowRight size={14} />
+          </Link>
+        </div>
+      )}
+
+      {/* Contenu principal — plein écran */}
+      <div className="flex-1 lg:ml-64 pt-[56px] lg:pt-0 w-full">
         {children}
       </div>
+
     </div>
   );
 }
