@@ -109,7 +109,7 @@ export default function SavantsPage() {
         </p>
       </div>
 
-      {/* Barre de recherche */}
+      {/* Recherche */}
       <div className="relative mb-6">
         <div className="absolute left-5 top-1/2 -translate-y-1/2 text-emerald/50 pointer-events-none">
           <IconSearch size={18} />
@@ -154,14 +154,13 @@ export default function SavantsPage() {
         ))}
       </div>
 
-      {/* Résultat de recherche */}
       {search && (
         <p className="text-sm text-gray-500 mb-5">
           {filtered.length} résultat{filtered.length > 1 ? "s" : ""} pour « {search} »
         </p>
       )}
 
-      {/* Grille */}
+      {/* Grille compacte */}
       {loading ? (
         <p className="text-gray-400">Chargement...</p>
       ) : filtered.length === 0 ? (
@@ -180,28 +179,19 @@ export default function SavantsPage() {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {filtered.map((s) => (
             <Link
               key={s.id}
               href={`/audio/savants/${s.slug}`}
-              className="group relative bg-white rounded-3xl overflow-hidden
-                         border border-emerald/5 hover:-translate-y-1.5
-                         hover:shadow-[0_25px_50px_rgba(13,92,74,0.15)]
-                         transition-all no-underline"
+              className="group bg-white rounded-2xl overflow-hidden
+                         border border-emerald/5 hover:-translate-y-1
+                         hover:shadow-[0_15px_35px_rgba(13,92,74,0.15)]
+                         hover:border-emerald/20 transition-all no-underline
+                         flex flex-col"
             >
-              <div
-                className={`absolute top-4 left-4 z-10 px-3 py-1 rounded-full text-[0.65rem] font-bold uppercase tracking-wider
-                ${
-                  s.categorie === "classique"
-                    ? "bg-gold/15 text-gold"
-                    : "bg-emerald/10 text-emerald"
-                }`}
-              >
-                {s.categorie === "classique" ? "Classique" : "Contemporain"}
-              </div>
-
-              <div className="relative aspect-[4/3] bg-gradient-to-br from-emerald/5 to-cream
+              {/* Image carrée */}
+              <div className="relative aspect-square bg-gradient-to-br from-emerald/5 to-cream
                               flex items-center justify-center overflow-hidden">
                 {s.photo_url ? (
                   <img
@@ -210,43 +200,58 @@ export default function SavantsPage() {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 ) : (
-                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-emerald to-emerald-dark
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald to-emerald-dark
                                   flex items-center justify-center text-gold">
-                    <IconUser size={40} />
+                    <IconUser size={32} />
                   </div>
                 )}
+
+                {/* Badge catégorie */}
+                <div
+                  className={`absolute top-2 left-2 px-2 py-0.5 rounded-full
+                              text-[0.58rem] font-bold uppercase tracking-wider
+                  ${
+                    s.categorie === "classique"
+                      ? "bg-gold/90 text-emerald-dark"
+                      : "bg-emerald/90 text-white"
+                  }`}
+                >
+                  {s.categorie === "classique" ? "Class." : "Contemp."}
+                </div>
               </div>
 
-              <div className="p-6">
+              {/* Infos compactes */}
+              <div className="p-3 flex flex-col flex-1">
                 {s.nom_ar && (
-                  <div className="font-amiri text-gold text-sm mb-1" dir="rtl">
+                  <div className="font-amiri text-gold text-[0.7rem] mb-0.5 leading-tight"
+                       dir="rtl">
                     {s.nom_ar}
                   </div>
                 )}
-                <h3 className="font-bold text-emerald-dark text-lg leading-tight mb-1">
+
+                <h3 className="font-bold text-emerald-dark text-sm leading-tight mb-1
+                               line-clamp-2 min-h-[2.3em]">
                   {getName(s)}
                 </h3>
+
                 {getTitre(s) && (
-                  <p className="text-xs text-gray-500 mb-3">{getTitre(s)}</p>
+                  <p className="text-[0.68rem] text-gray-500 mb-2 line-clamp-1">
+                    {getTitre(s)}
+                  </p>
                 )}
 
-                <div className="flex flex-wrap gap-3 text-[0.7rem] text-gray-400 mb-4">
+                <div className="flex items-center gap-2 text-[0.62rem] text-gray-400
+                                mt-auto pt-2 border-t border-emerald/5">
                   {s.pays && (
-                    <span className="inline-flex items-center gap-1">
-                      <IconLocation size={12} /> {s.pays}
+                    <span className="inline-flex items-center gap-0.5 truncate">
+                      <IconLocation size={10} /> {s.pays}
                     </span>
                   )}
                   {s.deces && (
-                    <span className="inline-flex items-center gap-1">
-                      <IconCalendar size={12} /> {s.deces}
+                    <span className="inline-flex items-center gap-0.5 shrink-0">
+                      <IconCalendar size={10} /> {s.deces}
                     </span>
                   )}
-                </div>
-
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald
-                                group-hover:gap-2.5 transition-all">
-                  Voir sa page
-                  <IconArrowRight size={12} />
                 </div>
               </div>
             </Link>
