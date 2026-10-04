@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { useLang } from "@/components/LangProvider";
 import {
   IconCrown, IconStarFull, IconLocation, IconCalendar,
-  IconArrowRight, IconUser,
+  IconArrowRight, IconUser, IconSearch,
 } from "@/components/icons";
 
 type Savant = {
@@ -31,6 +31,7 @@ export default function SavantsPage() {
   const [savants, setSavants] = useState<Savant[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<Filter>("tous");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -59,9 +60,19 @@ export default function SavantsPage() {
       ? s.titre_en || s.titre_fr
       : s.titre_fr;
 
-  const filtered = savants.filter(
-    (s) => filter === "tous" || s.categorie === filter
-  );
+  const filtered = savants
+    .filter((s) => filter === "tous" || s.categorie === filter)
+    .filter((s) => {
+      if (!search.trim()) return true;
+      const q = search.toLowerCase();
+      return (
+        s.nom_fr?.toLowerCase().includes(q) ||
+        s.nom_ar?.includes(search) ||
+        s.nom_en?.toLowerCase().includes(q) ||
+        s.titre_fr?.toLowerCase().includes(q) ||
+        s.pays?.toLowerCase().includes(q)
+      );
+    });
 
   const filters: { id: Filter; label: string; Icon: any }[] = [
     { id: "tous",         label: "Tous",          Icon: IconUser },
@@ -72,7 +83,6 @@ export default function SavantsPage() {
   return (
     <main className="px-[6%] pt-24 pb-40 max-w-[1200px] mx-auto">
 
-      {/* Retour */}
       <Link
         href="/audio"
         className="text-emerald text-sm font-semibold hover:underline inline-flex items-center gap-1"
@@ -80,8 +90,7 @@ export default function SavantsPage() {
         ← {t.common.back}
       </Link>
 
-      {/* En-tête */}
-      <div className="mt-6 mb-12">
+      <div className="mt-6 mb-10">
         <div className="flex items-center gap-3 mb-3">
           <div className="w-12 h-12 rounded-2xl bg-emerald/10 flex items-center justify-center text-emerald">
             <IconCrown size={24} />
@@ -98,6 +107,31 @@ export default function SavantsPage() {
           contemporains. Découvrez leurs enseignements, leurs œuvres et leurs
           audios.
         </p>
+      </div>
+
+      {/* Barre de recherche */}
+      <div className="relative mb-6">
+        <div className="absolute left-5 top-1/2 -translate-y-1/2 text-emerald/50 pointer-events-none">
+          <IconSearch size={18} />
+        </div>
+        <input
+          type="text"
+          placeholder="Rechercher un savant par nom, titre ou pays..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full pl-14 pr-5 py-4 rounded-2xl border-2 border-emerald/10
+                     focus:border-gold outline-none text-sm bg-white
+                     shadow-[0_4px_14px_rgba(13,92,74,0.05)]"
+        />
+        {search && (
+          <button
+            onClick={() => setSearch("")}
+            className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400
+                       hover:text-terracotta transition text-xl leading-none"
+          >
+            ×
+          </button>
+        )}
       </div>
 
       {/* Filtres */}
@@ -120,15 +154,30 @@ export default function SavantsPage() {
         ))}
       </div>
 
+      {/* Résultat de recherche */}
+      {search && (
+        <p className="text-sm text-gray-500 mb-5">
+          {filtered.length} résultat{filtered.length > 1 ? "s" : ""} pour « {search} »
+        </p>
+      )}
+
       {/* Grille */}
       {loading ? (
         <p className="text-gray-400">Chargement...</p>
       ) : filtered.length === 0 ? (
         <div className="bg-white rounded-3xl p-16 text-center border border-emerald/5">
           <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-emerald/10 flex items-center justify-center text-emerald">
-            <IconUser size={28} />
+            <IconSearch size={28} />
           </div>
-          <p className="text-gray-400">Aucun savant dans cette catégorie</p>
+          <p className="text-gray-400 mb-2">Aucun savant trouvé</p>
+          {search && (
+            <button
+              onClick={() => setSearch("")}
+              className="text-emerald text-sm font-semibold hover:underline"
+            >
+              Effacer la recherche
+            </button>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -141,7 +190,6 @@ export default function SavantsPage() {
                          hover:shadow-[0_25px_50px_rgba(13,92,74,0.15)]
                          transition-all no-underline"
             >
-              {/* Bandeau catégorie */}
               <div
                 className={`absolute top-4 left-4 z-10 px-3 py-1 rounded-full text-[0.65rem] font-bold uppercase tracking-wider
                 ${
@@ -153,7 +201,6 @@ export default function SavantsPage() {
                 {s.categorie === "classique" ? "Classique" : "Contemporain"}
               </div>
 
-              {/* Photo / Avatar */}
               <div className="relative aspect-[4/3] bg-gradient-to-br from-emerald/5 to-cream
                               flex items-center justify-center overflow-hidden">
                 {s.photo_url ? (
@@ -170,7 +217,6 @@ export default function SavantsPage() {
                 )}
               </div>
 
-              {/* Infos */}
               <div className="p-6">
                 {s.nom_ar && (
                   <div className="font-amiri text-gold text-sm mb-1" dir="rtl">
@@ -208,7 +254,6 @@ export default function SavantsPage() {
         </div>
       )}
 
-      {/* Lien admin */}
       <div className="mt-12 text-center">
         <Link
           href="/admin/savants"
