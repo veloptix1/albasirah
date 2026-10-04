@@ -1,3 +1,4 @@
+
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -33,11 +34,11 @@ export default function AdminDashboard() {
   }, []);
 
   const cards = [
-    { label: "Savants",  value: stats.savants,  Icon: IconUser,       href: "/admin/savants",       color: "emerald" },
-    { label: "Livres",   value: stats.livres,   Icon: IconLivre,      href: "/admin/livres",        color: "gold" },
-    { label: "Audios",   value: stats.audios,   Icon: IconSpeaker,    href: "/admin/audios",        color: "terracotta" },
-    { label: "Hadiths",  value: stats.hadiths,  Icon: IconParchemin,  href: "/admin/hadiths",       color: "indigo" },
-    { label: "Utilisateurs", value: stats.users, Icon: IconUser,      href: "/admin/utilisateurs",  color: "emerald" },
+    { label: "Savants",       value: stats.savants, Icon: IconUser,       href: "/admin/savants",      color: "emerald" },
+    { label: "Livres",        value: stats.livres,  Icon: IconLivre,      href: "/admin/livres",       color: "gold" },
+    { label: "Audios",        value: stats.audios,  Icon: IconSpeaker,    href: "/admin/audios",       color: "terracotta" },
+    { label: "Hadiths",       value: stats.hadiths, Icon: IconParchemin,  href: "/admin/hadiths",      color: "indigo" },
+    { label: "Utilisateurs",  value: stats.users,   Icon: IconUser,       href: "/admin/utilisateurs", color: "emerald" },
   ];
 
   const colorMap: Record<string, string> = {
@@ -48,7 +49,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <main className="p-6 lg:p-10 max-w-[1200px] mx-auto">
+    <main className="p-6 lg:p-12 max-w-[1400px] mx-auto">
       <div className="mb-10">
         <div className="text-xs font-bold text-gold uppercase tracking-[3px] mb-2">
           Panneau d'administration
@@ -61,19 +62,15 @@ export default function AdminDashboard() {
         </p>
       </div>
 
-      {/* Stats */}
       {loading ? (
         <p className="text-gray-400">Chargement...</p>
       ) : (
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
           {cards.map(({ label, value, Icon, href, color }) => (
-            <Link
-              key={href}
-              href={href}
+            <Link key={href} href={href}
               className="bg-white rounded-3xl p-6 border border-emerald/5
                          hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(13,92,74,0.1)]
-                         transition-all no-underline group"
-            >
+                         transition-all no-underline group">
               <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-4
                               ${colorMap[color]} group-hover:scale-110 transition`}>
                 <Icon size={22} />
@@ -90,7 +87,6 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* Guide rapide */}
       <div className="mt-12 bg-white rounded-3xl p-8 border border-emerald/5">
         <h2 className="font-bold text-emerald-dark text-xl mb-3">
           Par où commencer ?
