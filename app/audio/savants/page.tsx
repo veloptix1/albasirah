@@ -4,7 +4,8 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { useLang } from "@/components/LangProvider";
 import {
-  IconCrown, IconStarFull, IconLocation, IconArrowRight, IconUser,
+  IconCrown, IconStarFull, IconLocation, IconCalendar,
+  IconArrowRight, IconUser,
 } from "@/components/icons";
 
 type Savant = {
@@ -45,26 +46,37 @@ export default function SavantsPage() {
   }, []);
 
   const getName = (s: Savant) =>
-    lang === "ar" ? s.nom_ar || s.nom_fr : lang === "en" ? s.nom_en || s.nom_fr : s.nom_fr;
+    lang === "ar"
+      ? s.nom_ar || s.nom_fr
+      : lang === "en"
+      ? s.nom_en || s.nom_fr
+      : s.nom_fr;
 
   const getTitre = (s: Savant) =>
-    lang === "ar" ? s.titre_ar || s.titre_fr : lang === "en" ? s.titre_en || s.titre_fr : s.titre_fr;
+    lang === "ar"
+      ? s.titre_ar || s.titre_fr
+      : lang === "en"
+      ? s.titre_en || s.titre_fr
+      : s.titre_fr;
 
   const filtered = savants.filter(
     (s) => filter === "tous" || s.categorie === filter
   );
 
   const filters: { id: Filter; label: string; Icon: any }[] = [
-    { id: "tous",         label: "Tous",           Icon: IconUser },
-    { id: "classique",    label: "Classiques",     Icon: IconCrown },
-    { id: "contemporain", label: "Contemporains",  Icon: IconStarFull },
+    { id: "tous",         label: "Tous",          Icon: IconUser },
+    { id: "classique",    label: "Classiques",    Icon: IconCrown },
+    { id: "contemporain", label: "Contemporains", Icon: IconStarFull },
   ];
 
   return (
     <main className="px-[6%] pt-24 pb-40 max-w-[1200px] mx-auto">
 
       {/* Retour */}
-      <Link href="/audio" className="text-emerald text-sm font-semibold hover:underline inline-flex items-center gap-1">
+      <Link
+        href="/audio"
+        className="text-emerald text-sm font-semibold hover:underline inline-flex items-center gap-1"
+      >
         ← {t.common.back}
       </Link>
 
@@ -82,8 +94,9 @@ export default function SavantsPage() {
           {t.audio.bySavants}
         </h1>
         <p className="text-gray-500 max-w-2xl">
-          Les savants de la Salafiya bien guidée — des anciens aux contemporains.
-          Découvrez leurs enseignements, leurs œuvres et leurs audios.
+          Les savants de la Salafiya bien guidée — des anciens aux
+          contemporains. Découvrez leurs enseignements, leurs œuvres et leurs
+          audios.
         </p>
       </div>
 
@@ -95,9 +108,11 @@ export default function SavantsPage() {
             onClick={() => setFilter(id)}
             className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full
                         text-sm font-semibold whitespace-nowrap transition
-              ${filter === id
-                ? "bg-emerald text-white shadow-[0_8px_20px_rgba(13,92,74,0.25)]"
-                : "bg-white text-emerald-dark border border-emerald/10 hover:border-emerald/30"}`}
+              ${
+                filter === id
+                  ? "bg-emerald text-white shadow-[0_8px_20px_rgba(13,92,74,0.25)]"
+                  : "bg-white text-emerald-dark border border-emerald/10 hover:border-emerald/30"
+              }`}
           >
             <Icon size={16} />
             {label}
@@ -127,10 +142,14 @@ export default function SavantsPage() {
                          transition-all no-underline"
             >
               {/* Bandeau catégorie */}
-              <div className={`absolute top-4 left-4 z-10 px-3 py-1 rounded-full text-[0.65rem] font-bold uppercase tracking-wider
-                ${s.categorie === "classique"
-                  ? "bg-gold/15 text-gold"
-                  : "bg-emerald/10 text-emerald"}`}>
+              <div
+                className={`absolute top-4 left-4 z-10 px-3 py-1 rounded-full text-[0.65rem] font-bold uppercase tracking-wider
+                ${
+                  s.categorie === "classique"
+                    ? "bg-gold/15 text-gold"
+                    : "bg-emerald/10 text-emerald"
+                }`}
+              >
                 {s.categorie === "classique" ? "Classique" : "Contemporain"}
               </div>
 
@@ -189,10 +208,12 @@ export default function SavantsPage() {
         </div>
       )}
 
-      {/* Lien admin (si tu veux) */}
+      {/* Lien admin */}
       <div className="mt-12 text-center">
-        <Link href="/admin/savants"
-          className="text-xs text-gray-400 hover:text-emerald">
+        <Link
+          href="/admin/savants"
+          className="text-xs text-gray-400 hover:text-emerald"
+        >
           + Gérer les savants (admin)
         </Link>
       </div>
