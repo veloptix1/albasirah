@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { useLang } from "@/components/LangProvider";
 import {
   IconUser, IconLocation, IconCalendar, IconSpeaker, IconPlay,
-  IconArrowRight, IconStar,
+  IconStar, IconCrown, IconStarFull, IconBook,
 } from "@/components/icons";
 
 type Savant = {
@@ -42,19 +42,30 @@ export default function SavantPage({ params }: { params: Promise<{ slug: string 
   const [savant, setSavant] = useState<Savant | null>(null);
   const [audios, setAudios] = useState<Audio[]>([]);
   const [loading, setLoading] = useState(true);
+  const [playingId, setPlayingId] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
-      const { data: s } = await supabase
-        .from("savants").select("*").eq("slug", slug).single();
-      if (!s) { setLoading(false); return; }
-      setSavant(s);
+      try {
+        const { data: s, error } = await supabase
+          .from("savants").select("*").eq("slug", slug).single();
 
-      const { data: a } = await supabase
-        .from("audios").select("*").eq("savant_id", s.id)
-        .order("created_at", { ascending: false });
-      setAudios(a || []);
-      setLoading(false);
+        if (error || !s) {
+          console.error("Erreur savant:", error);
+          setLoading(false);
+          return;
+        }
+        setSavant(s);
+
+        const { data: a } = await supabase
+          .from("audios").select("*").eq("savant_id", s.id)
+          .order("created_at", { ascending: false });
+        setAudios(a || []);
+      } catch (err) {
+        console.error("Exception:", err);
+      } finally {
+        setLoading(false);
+      }
     })();
   }, [slug]);
 
@@ -72,7 +83,10 @@ export default function SavantPage({ params }: { params: Promise<{ slug: string 
         <h1 className="font-amiri font-bold text-emerald-dark text-3xl mb-4">
           Savant introuvable
         </h1>
-        <Link href="/audio/savants" className="text-emerald hover:underline">
+        <p className="text-gray-500 text-sm mb-6">
+          Ce savant n'existe pas ou a été supprimé.
+        </p>
+        <Link href="/audio/savants" className="text-emerald hover:underline font-semibold">
           ← Retour aux savants
         </Link>
       </main>
@@ -99,6 +113,8 @@ export default function SavantPage({ params }: { params: Promise<{ slug: string 
       : lang === "en" ? a.titre_en || a.titre_fr
       : a.titre_fr;
 
+  const isClassique = savant.categorie === "classique";
+
   return (
     <main className="px-[6%] pt-24 pb-40 max-w-[1200px] mx-auto">
 
@@ -107,73 +123,104 @@ export default function SavantPage({ params }: { params: Promise<{ slug: string 
         ← Retour aux savants
       </Link>
 
-      {/* Carte héro du savant */}
+      {/* Carte Héro */}
       <div className="mt-6 mb-12 bg-white rounded-[32px] overflow-hidden
                       border border-emerald/5
                       shadow-[0_25px_60px_rgba(13,92,74,0.12)]">
-        <div className="grid md:grid-cols-[280px_1fr]">
-          {/* Photo */}
-          <div className="relative aspect-square md:aspect-auto bg-gradient-to-br from-emerald to-emerald-dark
-                          flex items-center justify-center overflow-hidden">
-            {savant.photo_url ? (
-              <img src={savant.photo_url} alt={getName()}
-                className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-32 h-32 rounded-full bg-white/10 backdrop-blur
-                              flex items-center justify-center text-gold border-2 border-white/20">
-                <IconUser size={56} />
-              </div>
-            )}
-            <div className="absolute top-5 left-5 px-3 py-1 rounded-full text-[0.65rem] font-bold uppercase tracking-wider
-                            bg-gold/90 text-emerald-dark">
-              {savant.categorie === "classique" ? "Classique" : "Contemporain"}
-            </div>
+        <div className="relative">
+
+          <div className={`h-32 sm:h-40 bg-gradient-to-br
+            ${isClassique
+              ? "from-gold via-gold-light to-gold"
+              : "from-emerald-dark via-emerald to-emerald-light"}`}>
+            <div className="absolute inset-0 opacity-10"
+                 style={{
+                   backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40 Z' fill='none' stroke='%23ffffff' stroke-width='1.5'/%3E%3C/svg%3E")`
+                 }} />
           </div>
 
-          {/* Infos */}
-          <div className="p-8 sm:p-10">
-            {savant.nom_ar && (
-              <div className="font-amiri text-gold text-xl mb-2" dir="rtl">
-                {savant.nom_ar}
-              </div>
-            )}
-            <h1 className="font-amiri font-bold text-emerald-dark text-3xl sm:text-4xl mb-3">
-              {getName()}
-            </h1>
-            {getTitre() && (
-              <div className="inline-block px-3 py-1 rounded-full bg-emerald/8 text-emerald
-                              text-xs font-semibold mb-4">
-                {getTitre()}
-              </div>
-            )}
+          <div className="px-6 sm:px-10 pb-8 -mt-16 relative z-10">
+            <div className="flex flex-col sm:flex-row gap-6 items-center sm:items-end">
 
-            <div className="flex flex-wrap gap-4 text-xs text-gray-500 mb-6">
+              <div className={`w-32 h-32 rounded-3xl shrink-0 overflow-hidden
+                              border-4 border-white
+                              shadow-[0_15px_35px_rgba(13,92,74,0.2)]
+                              flex items-center justify-center
+                ${isClassique ? "bg-gold" : "bg-gradient-to-br from-emerald to-emerald-dark"}`}>
+                {savant.photo_url ? (
+                  <img src={savant.photo_url} alt={getName()}
+                    className="w-full h-full object-cover" />
+                ) : (
+                  <span className={isClassique ? "text-emerald-dark" : "text-gold"}>
+                    <IconUser size={48} />
+                  </span>
+                )}
+              </div>
+
+              <div className="flex-1 text-center sm:text-left pb-2">
+                {savant.nom_ar && lang !== "ar" && (
+                  <div className="font-amiri text-gold text-xl mb-1" dir="rtl">
+                    {savant.nom_ar}
+                  </div>
+                )}
+                <h1 className="font-amiri font-bold text-emerald-dark text-3xl sm:text-4xl mb-2">
+                  {getName()}
+                </h1>
+                {getTitre() && (
+                  <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full
+                                   text-xs font-bold uppercase tracking-wider
+                    ${isClassique
+                      ? "bg-gold/15 text-gold"
+                      : "bg-emerald/10 text-emerald"}`}>
+                    {isClassique ? <IconCrown size={12} /> : <IconStarFull size={12} />}
+                    {getTitre()}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-4 sm:gap-6 text-sm text-gray-500 mt-6 pt-6
+                            border-t border-emerald/5 justify-center sm:justify-start">
               {savant.pays && (
                 <span className="inline-flex items-center gap-1.5">
-                  <IconLocation size={14} /> {savant.pays}
+                  <span className="text-emerald"><IconLocation size={14} /></span>
+                  {savant.pays}
                 </span>
               )}
-              {savant.naissance && (
+              {(savant.naissance || savant.deces) && (
                 <span className="inline-flex items-center gap-1.5">
-                  <IconCalendar size={14} /> {savant.naissance}
+                  <span className="text-emerald"><IconCalendar size={14} /></span>
+                  {savant.naissance}
                   {savant.deces && ` — ${savant.deces}`}
                 </span>
               )}
             </div>
+          </div>
+        </div>
 
-            {getBio() && (
+        {getBio() && (
+          <div className="px-6 sm:px-10 pb-10 pt-2">
+            <div className="bg-cream rounded-3xl p-6 sm:p-8 border border-emerald/5">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-8 h-8 rounded-xl bg-gold/15 flex items-center justify-center text-gold">
+                  <IconBook size={16} />
+                </div>
+                <div className="text-xs font-bold text-gold uppercase tracking-wider">
+                  Biographie
+                </div>
+              </div>
               <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-line">
                 {getBio()}
               </p>
-            )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
-      {/* Audios du savant */}
+      {/* Audios */}
       <div className="mb-6 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-gold/15 flex items-center justify-center text-gold">
-          <IconSpeaker size={20} />
+        <div className="w-11 h-11 rounded-2xl bg-gold/15 flex items-center justify-center text-gold">
+          <IconSpeaker size={22} />
         </div>
         <div>
           <h2 className="font-amiri font-bold text-emerald-dark text-2xl">
@@ -196,25 +243,42 @@ export default function SavantPage({ params }: { params: Promise<{ slug: string 
         <div className="grid gap-3">
           {audios.map((a) => (
             <div key={a.id}
-              className="bg-white rounded-2xl p-4 flex items-center gap-4
-                         border border-emerald/5 hover:border-emerald/15
-                         hover:shadow-[0_10px_30px_rgba(13,92,74,0.08)] transition group">
-              <div className="w-12 h-12 rounded-full bg-gold flex items-center justify-center
+              className="bg-white rounded-2xl p-4 border border-emerald/5
+                         hover:border-emerald/15
+                         hover:shadow-[0_10px_30px_rgba(13,92,74,0.08)]
+                         transition">
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => setPlayingId(playingId === a.id ? null : a.id)}
+                  className="w-12 h-12 rounded-full bg-gold flex items-center justify-center
                               shadow-[0_4px_14px_rgba(212,175,55,0.35)] shrink-0
-                              group-hover:scale-110 transition">
-                <IconPlay size={14} />
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="font-semibold text-emerald-dark text-sm truncate">
-                  {getAudioTitle(a)}
-                </div>
-                {a.duree && (
-                  <div className="text-xs text-gray-500">
-                    {Math.floor(a.duree / 60)} min
+                              hover:scale-110 transition">
+                  <IconPlay size={14} />
+                </button>
+                <div className="flex-1 min-w-0">
+                  <div className="font-semibold text-emerald-dark text-sm truncate">
+                    {getAudioTitle(a)}
                   </div>
-                )}
+                  {a.duree && (
+                    <div className="text-xs text-gray-500">
+                      {Math.floor(a.duree / 60)} min {a.duree % 60}s
+                    </div>
+                  )}
+                </div>
+                <IconStar size={14} color="#d4af37" />
               </div>
-              <IconStar size={14} color="#d4af37" />
+
+              {/* Lecteur natif HTML5 */}
+              {playingId === a.id && (
+                <div className="mt-3 pt-3 border-t border-emerald/10">
+                  <audio
+                    src={a.audio_url}
+                    controls
+                    autoPlay
+                    className="w-full"
+                  />
+                </div>
+              )}
             </div>
           ))}
         </div>
