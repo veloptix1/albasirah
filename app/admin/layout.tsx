@@ -14,6 +14,7 @@ const menu = [
   { href: "/admin/livres",       label: "Livres",          Icon: IconLivre },
   { href: "/admin/audios",       label: "Audios",          Icon: IconSpeaker },
   { href: "/admin/hadiths",      label: "Hadiths",         Icon: IconParchemin },
+  { href: "/admin/coran",        label: "Coran",           Icon: IconBook },
   { href: "/admin/utilisateurs", label: "Utilisateurs",    Icon: IconUser },
 ];
 
@@ -28,18 +29,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     (async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { router.push("/auth"); return; }
-
       const { data: profile } = await supabase
         .from("profiles").select("role").eq("id", user.id).single();
-
-      if (profile?.role !== "admin") {
-        router.push("/dashboard");
-        return;
-      }
+      if (profile?.role !== "admin") { router.push("/dashboard"); return; }
       setAuthorized(true);
       setLoading(false);
     })();
   }, [router]);
+
+  useEffect(() => { setMenuOpen(false); }, [pathname]);
 
   if (loading) {
     return (
@@ -107,7 +105,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       {/* Top bar mobile */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-[900] bg-emerald-dark text-white
-                      px-4 py-3 flex items-center justify-between">
+                      px-4 py-3 flex items-center justify-between shadow-lg">
         <Link href="/admin" className="flex items-center gap-2 no-underline text-white">
           <div className="w-8 h-8 rounded-lg bg-gold/20 flex items-center justify-center">
             <IconMosque size={16} color="#d4af37" />
@@ -122,7 +120,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </button>
       </div>
 
-      {/* Menu mobile déroulant */}
+      {/* Menu mobile */}
       {menuOpen && (
         <div className="lg:hidden fixed top-[56px] left-0 right-0 z-[900] bg-emerald-dark
                         text-white p-4 space-y-1 max-h-[calc(100vh-56px)] overflow-y-auto">
@@ -157,11 +155,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
       )}
 
-      {/* Contenu principal — plein écran */}
+      {/* Contenu */}
       <div className="flex-1 lg:ml-64 pt-[56px] lg:pt-0 w-full">
         {children}
       </div>
-
     </div>
   );
 }
