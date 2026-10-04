@@ -169,4 +169,154 @@ export default function AdminLivresPage() {
                         p-4 overflow-y-auto">
           <div className="bg-white rounded-3xl w-full max-w-3xl my-8">
             <div className="sticky top-0 bg-white border-b border-emerald/10 px-6 py-4
-                            flex items-center justify
+                            flex items-center justify-between rounded-t-3xl">
+              <h2 className="font-bold text-emerald-dark">
+                {editing.id ? "Modifier" : "Ajouter"} un livre
+              </h2>
+              <button onClick={() => setEditing(null)}
+                className="text-gray-400 hover:text-terracotta text-2xl leading-none">×</button>
+            </div>
+
+            <div className="p-6 space-y-5">
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="Titre FR *">
+                  <input value={editing.titre_fr}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      setEditing({
+                        ...editing, titre_fr: v,
+                        slug: editing.id ? editing.slug : autoSlug(v),
+                      });
+                    }} className="inp" />
+                </Field>
+                <Field label="Slug *">
+                  <input value={editing.slug}
+                    onChange={(e) => setEditing({ ...editing, slug: e.target.value })}
+                    className="inp font-mono text-xs" />
+                </Field>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="Titre AR">
+                  <input dir="rtl" value={editing.titre_ar}
+                    onChange={(e) => setEditing({ ...editing, titre_ar: e.target.value })}
+                    className="inp font-amiri" />
+                </Field>
+                <Field label="Titre EN">
+                  <input value={editing.titre_en}
+                    onChange={(e) => setEditing({ ...editing, titre_en: e.target.value })}
+                    className="inp" />
+                </Field>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4">
+                <Field label="Auteur FR">
+                  <input value={editing.auteur_fr}
+                    onChange={(e) => setEditing({ ...editing, auteur_fr: e.target.value })}
+                    className="inp" />
+                </Field>
+                <Field label="Auteur AR">
+                  <input dir="rtl" value={editing.auteur_ar}
+                    onChange={(e) => setEditing({ ...editing, auteur_ar: e.target.value })}
+                    className="inp font-amiri" />
+                </Field>
+                <Field label="Auteur EN">
+                  <input value={editing.auteur_en}
+                    onChange={(e) => setEditing({ ...editing, auteur_en: e.target.value })}
+                    className="inp" />
+                </Field>
+              </div>
+
+              <Field label="Description FR">
+                <textarea rows={3} value={editing.description_fr}
+                  onChange={(e) => setEditing({ ...editing, description_fr: e.target.value })}
+                  className="inp" />
+              </Field>
+
+              <div className="grid grid-cols-2 gap-4">
+                <Field label="Fichier PDF *">
+                  <input type="file" accept="application/pdf"
+                    onChange={(e) => e.target.files?.[0] && uploadPDF(e.target.files[0])}
+                    className="inp text-xs" />
+                  {editing.pdf_url && (
+                    <p className="text-xs text-emerald mt-1 truncate">✓ {editing.pdf_url}</p>
+                  )}
+                </Field>
+                <Field label="Couverture (image)">
+                  <input type="file" accept="image/*"
+                    onChange={(e) => e.target.files?.[0] && uploadCover(e.target.files[0])}
+                    className="inp text-xs" />
+                  {editing.couverture_url && (
+                    <p className="text-xs text-emerald mt-1 truncate">✓ {editing.couverture_url}</p>
+                  )}
+                </Field>
+              </div>
+
+              <div className="grid grid-cols-4 gap-4">
+                <Field label="Pages">
+                  <input type="number" value={editing.pages || ""}
+                    onChange={(e) => setEditing({ ...editing, pages: Number(e.target.value) || null })}
+                    className="inp" />
+                </Field>
+                <Field label="Langue">
+                  <select value={editing.langue}
+                    onChange={(e) => setEditing({ ...editing, langue: e.target.value })}
+                    className="inp">
+                    <option value="fr">FR</option>
+                    <option value="ar">AR</option>
+                    <option value="en">EN</option>
+                  </select>
+                </Field>
+                <Field label="Catégorie">
+                  <input value={editing.categorie}
+                    onChange={(e) => setEditing({ ...editing, categorie: e.target.value })}
+                    className="inp" />
+                </Field>
+                <Field label="Ordre">
+                  <input type="number" value={editing.ordre}
+                    onChange={(e) => setEditing({ ...editing, ordre: Number(e.target.value) })}
+                    className="inp" />
+                </Field>
+              </div>
+            </div>
+
+            <div className="sticky bottom-0 bg-white border-t border-emerald/10 px-6 py-4
+                            flex justify-end gap-3 rounded-b-3xl">
+              <button onClick={() => setEditing(null)}
+                className="px-6 py-3 rounded-2xl border-2 border-emerald/15
+                           text-emerald-dark font-semibold text-sm">
+                Annuler
+              </button>
+              <button onClick={save} disabled={saving || uploading}
+                className="px-6 py-3 rounded-2xl bg-emerald text-white font-semibold text-sm
+                           disabled:opacity-50 inline-flex items-center gap-2">
+                <IconCheck size={16} />
+                {saving ? "Enreg..." : uploading ? "Upload..." : "Enregistrer"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style jsx global>{`
+        .inp {
+          width: 100%; padding: 12px 16px; border-radius: 14px;
+          border: 2px solid rgba(13,92,74,0.1); outline: none;
+          font-size: 14px; font-family: inherit; background: white;
+        }
+        .inp:focus { border-color: #d4af37; }
+      `}</style>
+    </main>
+  );
+}
+
+function Field({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div>
+      <label className="block text-xs font-semibold text-emerald-dark mb-1.5 uppercase tracking-wider">
+        {label}
+      </label>
+      {children}
+    </div>
+  );
+}
