@@ -1,18 +1,16 @@
-import "./globals.css";
-import type { Metadata } from "next";
-import { LangProvider } from "@/components/LangProvider";
+"use client";
+import Intro from "@/components/Intro";
+import Hero from "@/components/Hero";
+import Features from "@/components/Features";
 
-export const metadata: Metadata = {
-  title: "AL BASIRAH — La vision intérieure",
-  description: "Application islamique audio : savants, hadiths authentiques.",
-};
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function Home() {
   return (
-    <html lang="fr">
-      <body className="min-h-screen">
-        <LangProvider>{children}</LangProvider>
-      </body>
-    </html>
+    <>
+      <Intro />
+      <main>
+        <Hero />
+        <Features />
+      </main>
+    </>
   );
 }
