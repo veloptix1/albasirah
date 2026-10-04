@@ -11,11 +11,12 @@ type Ctx = {
 };
 
 const translations: Record<Lang, any> = {
-  fr: { common: { back: "Retour", loading: "Chargement..." }, nav: {}, audio: {}, home: {}, categories: {}, features: {}, burger: {} },
-  en: { common: { back: "Back", loading: "Loading..." }, nav: {}, audio: {}, home: {}, categories: {}, features: {}, burger: {} },
-  ar: { common: { back: "رجوع", loading: "جارٍ التحميل..." }, nav: {}, audio: {}, home: {}, categories: {}, features: {}, burger: {} },
+  fr: { common: { back: "Retour", loading: "Chargement..." } },
+  en: { common: { back: "Back", loading: "Loading..." } },
+  ar: { common: { back: "رجوع", loading: "جارٍ التحميل..." } },
 };
 
+// 🔥 Valeur par défaut pour éviter le crash SSR
 const defaultCtx: Ctx = {
   lang: "fr",
   setLang: () => {},
@@ -27,10 +28,8 @@ const LangContext = createContext<Ctx>(defaultCtx);
 
 export function LangProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>("fr");
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     try {
       const saved = (localStorage.getItem("lang") as Lang) || "fr";
       if (saved === "fr" || saved === "en" || saved === "ar") {
@@ -47,14 +46,6 @@ export function LangProvider({ children }: { children: ReactNode }) {
       document.documentElement.lang = l;
     } catch {}
   };
-
-  useEffect(() => {
-    if (!mounted) return;
-    try {
-      document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
-      document.documentElement.lang = lang;
-    } catch {}
-  }, [lang, mounted]);
 
   return (
     <LangContext.Provider
