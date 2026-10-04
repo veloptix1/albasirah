@@ -47,6 +47,12 @@ export default function CoranClient() {
     })();
   }, []);
 
+  // Bloque le scroll quand un menu est ouvert
+  useEffect(() => {
+    document.body.style.overflow = openMenuFor !== null ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [openMenuFor]);
+
   const filtered = sourates.filter((s) => {
     if (!search.trim()) return true;
     const q = search.toLowerCase();
@@ -114,112 +120,55 @@ export default function CoranClient() {
           {filtered.map((s) => {
             const audiosSourate = getAudiosFor(s.numero);
             const hasAudio = audiosSourate.length > 0;
-            const isMenuOpen = openMenuFor === s.numero;
 
             return (
               <div key={s.numero}
                 className="bg-white rounded-2xl border border-emerald/5
-                           hover:border-emerald/15 transition-all overflow-visible">
-                <div className="flex items-center gap-4 p-4">
+                           hover:border-emerald/15 transition-all">
+                <div className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4">
 
                   {/* Numéro */}
-                  <div className="w-11 h-11 rounded-xl bg-emerald/8 flex items-center justify-center
-                                  text-emerald font-bold text-sm shrink-0">
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-emerald/8
+                                  flex items-center justify-center text-emerald font-bold
+                                  text-xs sm:text-sm shrink-0">
                     {s.numero}
                   </div>
 
-                  {/* Nom (cliquable → page texte) */}
+                  {/* Nom */}
                   <Link href={`/audio/coran/${s.numero}`}
                     className="flex-1 min-w-0 no-underline group">
-                    <div className="font-semibold text-emerald-dark text-sm truncate
-                                    group-hover:text-emerald transition">
+                    <div className="font-semibold text-emerald-dark text-xs sm:text-sm
+                                    truncate group-hover:text-emerald transition">
                       {s.nom_translit} — {s.nom_fr}
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <div className="flex items-center gap-1.5 sm:gap-2 text-[0.65rem] sm:text-xs
+                                    text-gray-500 mt-0.5">
                       <span className="font-amiri" dir="rtl">{s.nom_ar}</span>
-                      <span>·</span>
-                      <span>{s.versets} versets</span>
-                      <span>·</span>
-                      <span>{s.type}</span>
+                      <span className="hidden sm:inline">·</span>
+                      <span className="hidden sm:inline">{s.versets} versets</span>
+                      <span className="hidden sm:inline">·</span>
+                      <span className="hidden sm:inline">{s.type}</span>
                     </div>
                   </Link>
 
-                  {/* Menu burger 3 traits (ouvre la liste des récitateurs) */}
-                  <div className="relative shrink-0">
-                    <button
-                      onClick={() => setOpenMenuFor(isMenuOpen ? null : s.numero)}
-                      aria-label="Récitateurs"
-                      className={`w-10 h-10 rounded-xl flex flex-col items-center justify-center
-                                  gap-[4px] transition
-                        ${hasAudio
-                          ? "bg-emerald text-gold hover:bg-emerald-dark"
-                          : "bg-gray-100 text-gray-400 cursor-not-allowed"}`}
-                      disabled={!hasAudio}
-                    >
-                      <span className="w-4 h-[2px] bg-current rounded" />
-                      <span className="w-4 h-[2px] bg-current rounded" />
-                      <span className="w-2.5 h-[2px] bg-current rounded self-start ml-3" />
-                    </button>
+                  {/* Menu burger 3 traits */}
+                  <button
+                    onClick={() => hasAudio && setOpenMenuFor(s.numero)}
+                    aria-label="Récitateurs"
+                    className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex flex-col
+                                items-center justify-center gap-[3px] sm:gap-[4px]
+                                transition shrink-0
+                      ${hasAudio
+                        ? "bg-emerald text-gold hover:bg-emerald-dark"
+                        : "bg-gray-100 text-gray-300"}`}
+                    disabled={!hasAudio}
+                  >
+                    <span className="w-3.5 h-[2px] bg-current rounded sm:w-4" />
+                    <span className="w-3.5 h-[2px] bg-current rounded sm:w-4" />
+                    <span className="w-2 h-[2px] bg-current rounded self-start ml-2 sm:w-2.5 sm:ml-3" />
+                  </button>
 
-                    {/* Menu déroulant des récitateurs */}
-                    {isMenuOpen && hasAudio && (
-                      <>
-                        <div
-                          onClick={() => setOpenMenuFor(null)}
-                          className="fixed inset-0 z-[500]"
-                        />
-                        <div className="absolute right-0 top-12 z-[600] w-72
-                                        bg-white rounded-2xl border border-emerald/10
-                                        shadow-[0_20px_50px_rgba(13,92,74,0.2)]
-                                        overflow-hidden">
-                          <div className="px-4 py-3 bg-emerald/5 border-b border-emerald/10">
-                            <div className="text-xs font-bold text-emerald-dark uppercase tracking-wider">
-                              Récitateurs disponibles
-                            </div>
-                          </div>
-                          {audiosSourate.map((a) => (
-                            <div key={a.id}>
-                              <button
-                                onClick={() => {
-                                  setPlayingId(a.id);
-                                  setOpenMenuFor(null);
-                                }}
-                                className="w-full px-4 py-3 flex items-center gap-3
-                                           hover:bg-cream transition text-left">
-                                <div className="w-8 h-8 rounded-full bg-gold
-                                                flex items-center justify-center shrink-0">
-                                  <IconPlay size={10} />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <div className="text-sm font-semibold text-emerald-dark truncate">
-                                    {a.recitateur_nom}
-                                  </div>
-                                  {a.duree && (
-                                    <div className="text-xs text-gray-500">
-                                      {Math.floor(a.duree / 60)} min
-                                    </div>
-                                  )}
-                                </div>
-                              </button>
-
-                              {playingId === a.id && (
-                                <div className="px-4 pb-3">
-                                  <audio
-                                    src={a.audio_url}
-                                    controls
-                                    autoPlay
-                                    className="w-full h-10"
-                                  />
-                                </div>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      </>
-                    )}
-                  </div>
-
-                  {/* Bouton télécharger (le premier récitateur disponible) */}
+                  {/* Bouton télécharger */}
                   {hasAudio && (
                     <a
                       href={audiosSourate[0].audio_url}
@@ -227,11 +176,11 @@ export default function CoranClient() {
                       target="_blank"
                       rel="noopener noreferrer"
                       title="Télécharger"
-                      className="w-10 h-10 rounded-xl bg-gold/15 hover:bg-gold/25
+                      className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gold/15 hover:bg-gold/25
                                  flex items-center justify-center text-gold
                                  transition shrink-0"
                     >
-                      <IconDownload size={16} />
+                      <IconDownload size={14} />
                     </a>
                   )}
                 </div>
@@ -241,7 +190,80 @@ export default function CoranClient() {
         </div>
       )}
 
-      {/* Lien admin */}
+      {/* Modal récitateurs (plein écran sur mobile) */}
+      {openMenuFor !== null && (
+        <div
+          className="fixed inset-0 z-[999] bg-black/60 backdrop-blur-sm
+                     flex items-end sm:items-center justify-center p-0 sm:p-4"
+          onClick={() => setOpenMenuFor(null)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full sm:max-w-md bg-white rounded-t-3xl sm:rounded-3xl
+                       max-h-[80vh] overflow-hidden flex flex-col
+                       shadow-[0_-20px_60px_rgba(0,0,0,0.3)] sm:shadow-[0_20px_60px_rgba(13,92,74,0.3)]"
+          >
+            {/* Header */}
+            <div className="px-5 py-4 border-b border-emerald/10 flex items-center justify-between shrink-0">
+              <div>
+                <div className="text-xs font-bold text-gold uppercase tracking-wider">
+                  Récitateurs disponibles
+                </div>
+                <div className="text-sm font-semibold text-emerald-dark mt-1">
+                  Sourate {openMenuFor}
+                </div>
+              </div>
+              <button
+                onClick={() => setOpenMenuFor(null)}
+                className="w-9 h-9 rounded-full bg-emerald/8 text-emerald
+                           hover:bg-emerald/15 flex items-center justify-center
+                           text-xl leading-none shrink-0"
+              >
+                ×
+              </button>
+            </div>
+
+            {/* Liste */}
+            <div className="overflow-y-auto flex-1">
+              {getAudiosFor(openMenuFor).map((a) => (
+                <div key={a.id} className="border-b border-emerald/5 last:border-0">
+                  <button
+                    onClick={() => setPlayingId(playingId === a.id ? null : a.id)}
+                    className="w-full px-5 py-4 flex items-center gap-3
+                               hover:bg-cream transition text-left">
+                    <div className="w-10 h-10 rounded-full bg-gold
+                                    flex items-center justify-center shrink-0">
+                      <IconPlay size={12} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-semibold text-emerald-dark truncate">
+                        {a.recitateur_nom}
+                      </div>
+                      {a.duree && (
+                        <div className="text-xs text-gray-500">
+                          {Math.floor(a.duree / 60)} min {a.duree % 60}s
+                        </div>
+                      )}
+                    </div>
+                  </button>
+
+                  {playingId === a.id && (
+                    <div className="px-5 pb-4">
+                      <audio
+                        src={a.audio_url}
+                        controls
+                        autoPlay
+                        className="w-full"
+                      />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="mt-12 text-center">
         <Link href="/admin/coran" className="text-xs text-gray-400 hover:text-emerald">
           + Gérer les audios du Coran (admin)
