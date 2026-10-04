@@ -11,14 +11,14 @@ import {
 } from "@/components/icons";
 
 const categories = [
-  { slug: "croyance",    Icon: IconAqida,     label: "Croyance",              color: "emerald" },
-  { slug: "priere",      Icon: IconSalat,     label: "La Prière",             color: "gold" },
-  { slug: "livre",       Icon: IconLivre,     label: "Livre",                 color: "terracotta" },
-  { slug: "rapporteurs", Icon: IconParchemin, label: "Rapporteurs Hadith",    color: "indigo" },
-  { slug: "prophetes",   Icon: IconProphetes, label: "Prophètes",             color: "emerald" },
-  { slug: "saaba",       Icon: IconSahaba,    label: "Les Sahaba",            color: "gold" },
-  { slug: "biographie",  Icon: IconBio,       label: "Biographie des Savants",color: "terracotta" },
-  { slug: "tafsir",      Icon: IconTafsir,    label: "Tafsir",                color: "indigo" },
+  { slug: "croyance",    Icon: IconAqida,     label: "Croyance",               color: "emerald" },
+  { slug: "priere",      Icon: IconSalat,     label: "La Prière",              color: "gold" },
+  { slug: "livre",       Icon: IconLivre,     label: "Livre",                  color: "terracotta" },
+  { slug: "rapporteurs", Icon: IconParchemin, label: "Rapporteurs Hadith",     color: "indigo" },
+  { slug: "prophetes",   Icon: IconProphetes, label: "Prophètes",              color: "emerald" },
+  { slug: "saaba",       Icon: IconSahaba,    label: "Les Sahaba",             color: "gold" },
+  { slug: "biographie",  Icon: IconBio,       label: "Biographie des Savants", color: "terracotta" },
+  { slug: "tafsir",      Icon: IconTafsir,    label: "Tafsir",                 color: "indigo" },
 ];
 
 const colorMap: Record<string, { bg: string; text: string; grad: string }> = {
@@ -35,31 +35,37 @@ export default function DashboardPage() {
 
   useEffect(() => {
     (async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        router.push("/auth");
-        return;
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          router.push("/auth");
+          return;
+        }
+        const { data } = await supabase
+          .from("profiles").select("nom").eq("id", user.id).single();
+        setNom(data?.nom || "Utilisateur");
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setLoading(false);
       }
-      const { data } = await supabase
-        .from("profiles").select("nom").eq("id", user.id).single();
-      setNom(data?.nom || "Utilisateur");
-      setLoading(false);
     })();
   }, [router]);
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-cream">
         <p className="text-emerald">Chargement...</p>
       </div>
     );
   }
 
+  // 🎯 Raccourcis : Audio / Livres / Hadiths / Profil
   const shortcuts = [
-    { Icon: IconSpeaker, label: "Audio",      href: "/audio",    color: "emerald" },
-    { Icon: IconBook,    label: "Hadiths",    href: "/hadiths",  color: "gold" },
-    { Icon: IconStar,    label: "Favoris",    href: "/favoris",  color: "terracotta" },
-    { Icon: IconUser,    label: "Profil",     href: "/profil",   color: "indigo" },
+    { Icon: IconSpeaker, label: "Audio",   href: "/audio",   color: "emerald" },
+    { Icon: IconLivre,   label: "Livres",  href: "/livres",  color: "gold" },
+    { Icon: IconParchemin, label: "Hadiths", href: "/hadiths", color: "terracotta" },
+    { Icon: IconUser,    label: "Profil",  href: "/profil",  color: "indigo" },
   ];
 
   return (
@@ -69,7 +75,6 @@ export default function DashboardPage() {
       <div className="relative mb-12 rounded-3xl overflow-hidden
                       bg-gradient-to-br from-emerald-dark via-emerald to-emerald-light
                       p-8 sm:p-10 text-white shadow-[0_20px_50px_rgba(13,92,74,0.25)]">
-        {/* Motif en fond */}
         <div className="absolute inset-0 opacity-[0.08]"
              style={{
                backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40 Z' fill='none' stroke='%23ffffff' stroke-width='1'/%3E%3C/svg%3E")`
@@ -148,7 +153,6 @@ export default function DashboardPage() {
                          hover:shadow-[0_25px_50px_rgba(13,92,74,0.15)]
                          transition-all no-underline group"
             >
-              {/* Barre colorée en haut au hover */}
               <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${c.grad}
                               transform scale-x-0 group-hover:scale-x-100
                               origin-left transition-transform duration-500`} />
