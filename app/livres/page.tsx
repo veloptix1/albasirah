@@ -1,3 +1,5 @@
+import LivresClient from "./LivresClient";
+
 export default function Page() {
-  return <h1>Livres</h1>;
+  return <LivresClient />;
 }
