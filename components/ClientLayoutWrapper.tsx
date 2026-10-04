@@ -2,6 +2,7 @@
 import { usePathname } from "next/navigation";
 import Navbar from "./Navbar";
 import BottomNav from "./BottomNav";
+import AudioPlayer from "./AudioPlayer";
 
 export default function ClientLayoutWrapper({
   children,
@@ -17,6 +18,7 @@ export default function ClientLayoutWrapper({
     <>
       <Navbar />
       <div className="pt-[72px]">{children}</div>
+      <AudioPlayer />
       <BottomNav />
     </>
   );
