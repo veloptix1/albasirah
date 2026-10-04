@@ -47,12 +47,25 @@ export default function AdminAudiosPage() {
 
   const uploadMP3 = async (file: File) => {
     setUploading(true);
-    const name = `${Date.now()}-${file.name.replace(/\s+/g, "-")}`;
+
+    // 🔥 Nettoyer le nom du fichier (retire accents, caractères arabes, espaces, etc.)
+    const ext = file.name.split(".").pop()?.toLowerCase() || "mp3";
+    const cleanName = file.name
+      .replace(/\.[^/.]+$/, "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-zA-Z0-9]/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "")
+      .substring(0, 50);
+
+    const name = `${Date.now()}-${cleanName || "audio"}.${ext}`;
+
     const { error } = await supabase.storage.from("audios").upload(name, file);
     setUploading(false);
     if (error) { alert("Erreur upload : " + error.message); return; }
 
-    // Obtenir la durée
+    // Calcul automatique de la durée
     const url = URL.createObjectURL(file);
     const audio = new Audio(url);
     audio.addEventListener("loadedmetadata", () => {
@@ -258,12 +271,18 @@ export default function AdminAudiosPage() {
                     <div className="flex items-center gap-2 mb-2">
                       <IconPlay size={12} />
                       <span className="text-xs text-emerald font-semibold">
-                        Fichier chargé {editing.duree && `(${Math.floor(editing.duree / 60)} min)`}
+                        Fichier chargé {editing.duree && `(${Math.floor(editing.duree / 60)} min ${editing.duree % 60}s)`}
                       </span>
                     </div>
                     <audio src={editing.audio_url} controls className="w-full h-10" />
                   </div>
                 )}
+              </Field>
+
+              <Field label="Ordre d'affichage">
+                <input type="number" value={editing.ordre}
+                  onChange={(e) => setEditing({ ...editing, ordre: Number(e.target.value) })}
+                  className="inp" />
               </Field>
             </div>
 
