@@ -71,11 +71,6 @@ export const IconCheck = ({ size = 16 }) => (
   </svg>
 );
 
-/* ============================================
-   NOUVELLES ICÔNES POUR LES CATÉGORIES
-   ============================================ */
-
-// Croyance (Aqida) — cœur avec étoile
 export const IconAqida = ({ size = 26 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
        stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -83,7 +78,6 @@ export const IconAqida = ({ size = 26 }) => (
   </svg>
 );
 
-// Prière (Salat) — mosquée
 export const IconSalat = ({ size = 26 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
        stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -93,7 +87,6 @@ export const IconSalat = ({ size = 26 }) => (
   </svg>
 );
 
-// Livre — livre ouvert
 export const IconLivre = ({ size = 26 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
        stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -102,7 +95,6 @@ export const IconLivre = ({ size = 26 }) => (
   </svg>
 );
 
-// Rapporteurs — parchemin
 export const IconParchemin = ({ size = 26 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
        stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -111,7 +103,6 @@ export const IconParchemin = ({ size = 26 }) => (
   </svg>
 );
 
-// Prophètes — étoile
 export const IconProphetes = ({ size = 26 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
        stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -119,7 +110,6 @@ export const IconProphetes = ({ size = 26 }) => (
   </svg>
 );
 
-// Sahaba — mains serrées
 export const IconSahaba = ({ size = 26 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
        stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -130,7 +120,6 @@ export const IconSahaba = ({ size = 26 }) => (
   </svg>
 );
 
-// Biographie — personne avec livre
 export const IconBio = ({ size = 26 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
        stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -141,7 +130,6 @@ export const IconBio = ({ size = 26 }) => (
   </svg>
 );
 
-// Tafsir — livre avec loupe
 export const IconTafsir = ({ size = 26 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
        stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -152,7 +140,6 @@ export const IconTafsir = ({ size = 26 }) => (
   </svg>
 );
 
-// Flèche vers la droite
 export const IconArrowRight = ({ size = 16 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -160,13 +147,12 @@ export const IconArrowRight = ({ size = 16 }) => (
   </svg>
 );
 
-// Sparkles pour le dashboard
 export const IconSparkle = ({ size = 18 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
     <path d="M12 2l1.5 6.5L20 10l-6.5 1.5L12 18l-1.5-6.5L4 10l6.5-1.5z"/>
   </svg>
 );
-// Couronne (savants classiques)
+
 export const IconCrown = ({ size = 22 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
        stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -175,14 +161,12 @@ export const IconCrown = ({ size = 22 }) => (
   </svg>
 );
 
-// Étoile pleine (contemporains)
 export const IconStarFull = ({ size = 22 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
     <path d="M12 2l2.9 6.9L22 10l-5.5 4.7L18.2 22 12 18.3 5.8 22l1.7-7.3L2 10l7.1-1.1z"/>
   </svg>
 );
 
-// Diplôme (oustaz)
 export const IconDiploma = ({ size = 22 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
        stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -191,7 +175,6 @@ export const IconDiploma = ({ size = 22 }) => (
   </svg>
 );
 
-// Localisation
 export const IconLocation = ({ size = 14 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
        stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -200,18 +183,10 @@ export const IconLocation = ({ size = 14 }) => (
   </svg>
 );
 
-// Calendrier
 export const IconCalendar = ({ size = 14 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
        stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <rect x="3" y="4" width="18" height="18" rx="2"/>
     <path d="M16 2v4M8 2v4M3 10h18"/>
-  </svg>
-);
-export const IconBook = ({ size = 22 }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
-       stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M2 4h7a3 3 0 013 3v13a2 2 0 00-2-2H2z"/>
-    <path d="M22 4h-7a3 3 0 00-3 3v13a2 2 0 012-2h8z"/>
   </svg>
 );
