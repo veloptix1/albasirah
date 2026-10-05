@@ -14,6 +14,7 @@ const menu = [
   { href: "/admin/livres",       label: "Livres",          Icon: IconLivre },
   { href: "/admin/audios",       label: "Audios",          Icon: IconSpeaker },
   { href: "/admin/hadiths",      label: "Hadiths",         Icon: IconParchemin },
+  { href: "/admin/rapporteurs",  label: "Rapporteurs",     Icon: IconUser },
   { href: "/admin/coran",        label: "Coran",           Icon: IconBook },
   { href: "/admin/prophetes",    label: "Prophètes",       Icon: IconStar },
   { href: "/admin/sahaba",       label: "Sahaba",          Icon: IconUser },
