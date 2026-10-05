@@ -5,7 +5,7 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import {
   IconMosque, IconSpeaker, IconLivre, IconBook,
-  IconUser, IconHome, IconArrowRight, IconParchemin,
+  IconUser, IconHome, IconArrowRight, IconParchemin, IconCrown,
 } from "@/components/icons";
 
 const menu = [
