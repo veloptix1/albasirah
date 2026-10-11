@@ -40,6 +40,7 @@ export default function SourateView() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
+    console.log("✅ Page chargée - useEffect");
     (async () => {
       try {
         const { data: infoData, error: infoErr } = await supabase
