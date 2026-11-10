@@ -1,1 +1,8 @@
-    "allowMixedContent": false,
+{
+  "appId": "com.albasirah.app",
+  "appName": "AL BASIRAH",
+  "webDir": "out",
+  "android": {
+    "allowMixedContent": false
+  }
+}
