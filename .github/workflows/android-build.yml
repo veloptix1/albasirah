@@ -1,0 +1,12 @@
+concurrency:
+  group: android-build
+  cancel-in-progress: false
+
+        with:
+          persist-credentials: false
+        run: npm ci
+          curl --fail-with-body -sS -X POST \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_KEY" \
+          curl --fail-with-body -sS -X POST \
+            -H "apikey: $SUPABASE_SERVICE_KEY" \
+            -H "Authorization: Bearer $SUPABASE_SERVICE_KEY" \
